@@ -1,0 +1,10 @@
+#CHAR CATEGORY      MAIN
+#INT REPS_OFFSET    5
+
+%MAIN #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
+
+$Dead_Bug_Exercise                       1 F 15 20 3
+$Glute_Bridge_Exercise                   1 F 15 20 3 NO_DISPLAY
+$Squat_Exercise                          1 F 12 15 3
+$Butterfly_Exercise                      1 T 12 20 3
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
