@@ -1,10 +1,25 @@
+#INT ROUNDS         1
 #CHAR CATEGORY      MAIN
-#INT REPS_OFFSET    5
 
 %MAIN #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
 
 $Dead_Bug_Exercise                       1 F 15 20 3
+"Lower abdomen"
 $Glute_Bridge_Exercise                   1 F 15 20 3 NO_DISPLAY
+"Glutes, Hamstrings, Hip flexors, Erector spinae"
 $Squat_Exercise                          1 F 12 15 3
+"Glutes, Hamstrings, Calves, Quads"
 $Butterfly_Exercise                      1 T 12 20 3
+"Hip flexors"
+$RKC_Plank_Exercise                      1 T 12 20 3
+"Lower abdomen, Glutes, Back muscles, shoulders"
+$Wall_Psoas_Hold_Exercise                1 F 15 20 3
+"Hip flexors"
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+
+Lower abdomen: 2
+Glutes: 3
+Hip flexors: 3
+Hamstrings: 3
+

@@ -6,12 +6,16 @@
 #include <algorithm>
 #include <string>
 
+#include <Windows.h>
+
 using std::cout;
 using std::endl;
 
 /* INCLUDES */
 #include "macros.h"
 #include "data.h"
+
+extern HANDLE hConsole;
 
 class Exercise {
 public:
@@ -22,6 +26,7 @@ public:
     int hold;
     int ahold;
     std::string tags;
+    std::string description;
 
     // Instantiated constructor
 
@@ -56,12 +61,16 @@ public:
         cout << "# Ahold: " << this->ahold << "s" << endl;
         cout << "# Tags: " << this->tags << endl;
         cout << "# Time: " << CalculateTime() << " minute(s)" << endl << endl;
+        cout << this->description << endl << endl;
     }
 
     void Describe2 () {
         std::string tmp = this->name;
         std::replace(tmp.begin(), tmp.end(), '_', ' ');
+        FOREGROUND_COLOR(240);
         cout << tmp << "  " << this->freestyle << "  " << this->sets << "  " << this->reps << "  " << this->hold << "  " << this->ahold << endl;
+        RESET_COLORS();
+        cout << this->description << endl;
     }
     
     double CalculateTime () {

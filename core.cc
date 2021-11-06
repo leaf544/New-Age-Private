@@ -98,6 +98,9 @@ int main (void) {
             }
             values.clear();
         }
+        if (line[0] == '"' && Exercises.size() > 0) {
+            Exercises.back().description = line.substr(1, line.length() - 2);
+        }
     }
 
     // living_category.ListVariables();
@@ -117,7 +120,6 @@ int main (void) {
     compile_extensions("post_start_screen");
     RESET_COLORS();
     cout << endl;
-    FOREGROUND_COLOR(240);
     (Exercises.begin())->Describe2();
     RESET_COLORS();
     cout << endl << "Press any key to start" << endl;
