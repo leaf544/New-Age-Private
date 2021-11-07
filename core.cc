@@ -133,9 +133,15 @@ int main (void) {
     bool finished = false;
     
     FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchValueInt))) {
+        RESET_COLORS();
         reader.set(0);
         current_exercise = reader.at(0);
         reader.attatch(&Exercises);
+        
+        if (ROUNDS > 0) {
+            current_exercise->Describe();
+            ON_KEY_CLS();
+        }
         
         while (not finished) {
             
@@ -198,7 +204,7 @@ int main (void) {
         compile_extensions("round_end");
     }
     
-    UTIL::espeak("Exercise finished! Excellent job");
+    UTIL::espeak("Exercise finished, Excellent job");
     
     cin.get();
     return 0;
