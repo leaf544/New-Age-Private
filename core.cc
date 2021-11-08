@@ -32,7 +32,8 @@ HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 std::string FetchValue (std::string);
 int FetchValueInt (std::string);
-void bar (const char* label, int a, int b);
+void bar (const char*, int, int, int);
+void ClearScreen ();
 
 using std::cout;
 using std::endl;
@@ -55,6 +56,11 @@ int main (void) {
     /* SETUP & PREREQUISITES */
 
     STARTUP_SETUP();    
+
+    CONSOLE_CURSOR_INFO info;
+    info.dwSize = 100;
+    info.bVisible = false;
+    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
     
     /* COMPILE EXERCISES AND VARIABLES */
 
@@ -159,19 +165,32 @@ int main (void) {
                 /* End Sets Block */
                 FLOOP (int, REPS, current_exercise->reps * 2) {
                     if (not alternate) {
-                        bar("REPS: ", current_reps, current_exercise->reps);
+                        ClearScreen();
+                        bar("REPS: ", current_reps, current_exercise->reps, 11);
+                        bar("HOLD: ", 0, current_exercise->hold, 6);
                         current_reps++;
                         UTIL::espeak(std::to_string(current_reps), current_exercise->freestyle);
                         SLEEP_TIME_FUNCTION(current_exercise->hold, if (GetAsyncKeyState(0x39)){
                                 Log("Skipping..", 4);
                                 skipped = true;
                                 break;
-                            });
+                            }
+
+                            if (elapsed != last) {
+                                // CLEAR();
+                                // bar("REPS: ", current_reps, current_exercise->reps);
+                                ClearScreen();
+                                bar("REPS: ", current_reps, current_exercise->reps, 11);
+                                bar("HOLD: ", elapsed, current_exercise->hold, 6);
+                            }
+                            
+                            );
                         
                         if (skipped) break;
                     } else {
+                        ClearScreen();
                         UTIL::espeak("Alternate", current_exercise->freestyle);
-                        bar("REPS: ", current_reps, current_exercise->reps);
+                        bar("REPS: ", current_reps, current_exercise->reps, 11);
                         SLEEP_TIME_FUNCTION(current_exercise->ahold, if (GetAsyncKeyState(0x39)){
                                 Log("Skipping..", 4);
                                 skipped = true;
@@ -218,9 +237,9 @@ int FetchValueInt (std::string iden) {
     return atoi(FetchValue(iden).c_str());
 }
 
-void bar(const char* label, int a, int b) {
-    FOREGROUND_COLOR(11);
-    CLEAR();
+void bar(const char* label, int a, int b, int c) {
+    FOREGROUND_COLOR(c);
+    //CLEAR();
     std::string sbar(b, ' ');
     FLOOP(int, i, a) {
         sbar[i] = '#';
@@ -230,3 +249,7 @@ void bar(const char* label, int a, int b) {
     RESET_COLORS();
 }
 
+
+void ClearScreen () {	
+    COORD cursorPosition;	cursorPosition.X = 0;	cursorPosition.Y = 0;	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}

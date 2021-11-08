@@ -20,9 +20,10 @@
 #define SLEEP_TIME_FUNCTION(t, body) {          \
         int start = time(NULL);                 \
         int elapsed = 0;                        \
+        int last = 0;                           \
         while (elapsed < t) {                   \
-            body;                               \
             elapsed = time(NULL) - start;       \
+            body;                               \
         }                                       \
     }
 
