@@ -167,7 +167,7 @@ int main (void) {
                     if (not alternate) {
                         ClearScreen();
                         bar("REPS: ", current_reps, current_exercise->reps, 11);
-                        bar("HOLD: ", 0, current_exercise->hold, 6);
+                        bar("HOLD: ", 0, current_exercise->hold, 5);
                         current_reps++;
                         UTIL::espeak(std::to_string(current_reps), current_exercise->freestyle);
                         SLEEP_TIME_FUNCTION(current_exercise->hold, if (GetAsyncKeyState(0x39)){
@@ -180,8 +180,8 @@ int main (void) {
                                 // CLEAR();
                                 // bar("REPS: ", current_reps, current_exercise->reps);
                                 ClearScreen();
-                                bar("REPS: ", current_reps, current_exercise->reps, 11);
-                                bar("HOLD: ", elapsed, current_exercise->hold, 6);
+                                bar("REPS: ", current_reps-1, current_exercise->reps, 11);
+                                bar("HOLD: ", elapsed, current_exercise->hold, 5);
                             }
                             
                             );
@@ -251,5 +251,8 @@ void bar(const char* label, int a, int b, int c) {
 
 
 void ClearScreen () {	
-    COORD cursorPosition;	cursorPosition.X = 0;	cursorPosition.Y = 0;	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+    COORD cursorPosition;
+    cursorPosition.X = 0;
+    cursorPosition.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }

@@ -70,7 +70,7 @@ public:
         FOREGROUND_COLOR(240);
         cout << tmp << "  " << this->freestyle << "  " << this->sets << "  " << this->reps << "  " << this->hold << "  " << this->ahold << endl;
         RESET_COLORS();
-        cout << this->description << endl;
+        cout << "[" << this->description << "]"<< endl;
     }
     
     double CalculateTime () {
