@@ -121,7 +121,7 @@ int main (void) {
         case EXERCISE_MARKER:
             if (category == FetchValue("CATEGORY")) {
                 Exercises.push_back(Exercise(
-                                             values[0], // NAME
+                                             values[0],
                                              (values.size() > 2) == false ? DEFAULT_FREESTYLE : values[2][0],
                                              (values.size() > 1) == false ? DEFAULT_SETS : CATOI(values[1]), 
                                              (values.size() > 3) == false ? DEFAULT_REPS : CATOI(values[3]), 
@@ -210,7 +210,7 @@ int main (void) {
                             }
                             if (elapsed != last) {
                                 ClearScreen();
-                                //bar("REPS: ", current_reps-1, current_exercise->reps, 11);
+                                bar("REPS: ", current_reps-1, current_exercise->reps, 11);
                                 bar("HOLD: ", elapsed, current_exercise->hold, 5);
                             });
                         
@@ -242,8 +242,8 @@ int main (void) {
             } else {
                 reader.progress();
                 current_exercise = reader.at(reader.i);
-                cout << "# Next Exercise" << endl;
-                current_exercise->Describe();
+                //cout << "# Next Exercise" << endl;
+                current_exercise->Describe2();
                 ON_KEY_CLS();
             }
         }
