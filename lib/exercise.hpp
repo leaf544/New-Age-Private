@@ -13,7 +13,6 @@ using std::endl;
 
 /* INCLUDES */
 #include "macros.h"
-#include "data.h"
 
 extern HANDLE hConsole;
 
@@ -35,11 +34,11 @@ public:
     // Semi-default constructor
     Exercise (std::string n) {
         this->name = n;
-        this->freestyle = DEFAULT_FREESTYLE;
-        this->sets = DEFAULT_SETS;
-        this->reps = DEFAULT_REPS;
-        this->hold = DEFAULT_HOLD;
-        this->ahold = DEFAULT_AHOLD;
+        // this->freestyle = DEFAULT_FREESTYLE;
+        // this->sets = DEFAULT_SETS;
+        // this->reps = DEFAULT_REPS;
+        // this->hold = DEFAULT_HOLD;
+        // this->ahold = DEFAULT_AHOLD;
     }
     
     // Constructor with options

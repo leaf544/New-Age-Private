@@ -5,6 +5,8 @@
 
 /* GENERAL USE MACROS */
 
+#define BIGGER(a, b) a > b
+
 #define STANDARD_EXIT_PROCEDURE() { \
     std::cin.get(); \
     std::exit(1);   \
@@ -38,7 +40,6 @@
 
 /* NEW AGE RELATED MACROS */
 
-#define STARTUP_SETUP() system("title New Age");
 #define FOREGROUND_COLOR(c) SetConsoleTextAttribute(hConsole, c);
 #define BACKGROUND_COLOR(c) SetConsoleTextAttribute(hConsole, c);
 #define RESET_COLORS() FOREGROUND_COLOR(DEFAULT_FOREGROUND);

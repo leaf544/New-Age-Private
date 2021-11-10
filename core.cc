@@ -9,6 +9,7 @@
 #include <map>
 #include <sstream>
 #include <fstream>
+#include <cctype>
 
 /* LIB */
 #include "lib/macros.h"
@@ -35,6 +36,14 @@ int FetchValueInt (std::string);
 void bar (const char*, int, int, int);
 void ClearScreen ();
 
+/* DEFAULTS */
+
+int DEFAULT_SETS = 0;
+int DEFAULT_FREESTYLE = 0;
+int DEFAULT_REPS = 0;
+int DEFAULT_HOLD = 0;
+int DEFAULT_AHOLD = 0;
+
 using std::cout;
 using std::endl;
 using std::cin;
@@ -54,9 +63,8 @@ public:
 int main (void) {
     
     /* SETUP & PREREQUISITES */
-
-    STARTUP_SETUP();    
-
+    
+    system("title NewAge");
     CONSOLE_CURSOR_INFO info;
     info.dwSize = 100;
     info.bVisible = false;
@@ -67,61 +75,87 @@ int main (void) {
     std::ifstream file(FILE_PATH);
     std::string category = "";
     std::vector<std::string> values;
-
-    /* PRE COMPILATION */
+    
+    /* PRE COMPILATION  */ 
+    
+    bool variables_compiled = false;
     
     for (std::string line; std::getline(file, line);) {
-        if (line[0] == VARIABLE_MARKER) {
-            values = UTIL::split_string(line.substr(1, line.length()), " ");
+        if (!line.size()) continue;
+        values = UTIL::split_string(line.substr(1, line.length()), " ");
+        // DEBUG BEG
+        // cout << "Values: ";
+        // for (auto& val : values) {
+        //     cout << val << ", ";
+        // }
+        // DEBUG END
+        switch (line[0]) {
+        case VARIABLE_MARKER: 
             Variables[values[1]] = values[2];
-            values.clear();
-        }
-        if (line[0] == '%') {
-            /* Category Block Begin */
-            values = UTIL::split_string(line.substr(1, line.length()), " ");
+            break;
+        case CATEGORY_MARKER:
+
+            // DEBUG BEG
+            // for (auto it = Variables.begin(); it != Variables.end(); it++) {
+            //     cout << "IDEN: " << it->first << " / " << "VALUE: " << it->second << endl;
+            // }
+            // DEBUG END
+            
+            variables_compiled = true;
             category = values[0];
-
+            // DEBUG BEG
+            // cout << "Category: " << category << endl;
+            // cout << "Category specifier: " << FetchValue("CATEGORY") << endl;
+            // cout << std::boolalpha << (category == FetchValue("CATEGORY")) << endl;
+            // DEBUG END
             if (category == FetchValue("CATEGORY") and values.size() > 1) {
-                living_category.hasVariables = true; // IMPORTANT
+                // DEBUG BEG
+                cout << "Marked category: " << category << endl;
+                // DEBUG END
+                living_category.hasVariables = true;
                 values.erase(values.begin());
-                auto tmp = values;
                 int p = 1;
-                FLOOP (int, n, tmp.size() / 3) {
-                    living_category.Variables[tmp[p]] = tmp[p+1];
-                    p += 3;
-                }
+                FLOOP (int, n, values.size() / 3) { living_category.Variables[values[p]] = values[p+1]; p+=3; }
             }
-            /* Category Block End */
-        }
-        if (line[0] == EXERCISE_MARKER and category == Variables["CATEGORY"]) {
-            values = UTIL::split_string(line.substr(1, line.length()), " ");
-            Exercises.push_back(Exercise(values[0], values[2][0], CATOI(values[1]), CATOI(values[3]), CATOI(values[4]), CATOI(values[5])));
-            if (values.size() > 6) {
-                //Exercises.back().tags = values
-                FLOOPS (int, i, 6, values.size()) {
-                    Exercises.back().tags.append(values[i] + " ");
-                }
+            break;
+        case EXERCISE_MARKER:
+            if (category == FetchValue("CATEGORY")) {
+                Exercises.push_back(Exercise(
+                                             values[0], // NAME
+                                             (values.size() > 2) == false ? DEFAULT_FREESTYLE : values[2][0],
+                                             (values.size() > 1) == false ? DEFAULT_SETS : CATOI(values[1]), 
+                                             (values.size() > 3) == false ? DEFAULT_REPS : CATOI(values[3]), 
+                                             (values.size() > 4) == false ? DEFAULT_HOLD : CATOI(values[4]), 
+                                             (values.size() > 5) == false ? DEFAULT_AHOLD : CATOI(values[5])));
             }
-            values.clear();
+            break;
+        case DESCRIPTION_MARKER:
+            if (Exercises.size()) Exercises.back().description = line.substr(1, line.length() - 2);
+            break;
         }
-        if (line[0] == '"' && Exercises.size() > 0) {
-            Exercises.back().description = line.substr(1, line.length() - 2);
+        
+        if (variables_compiled) {
+            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchValueInt));
+            DEFAULT_FREESTYLE = (DETERMINE_VALUE("DEFAULT_FREESTYLE", FetchValueInt));
+            DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchValueInt));
+            DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchValueInt));
+            DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchValueInt));
         }
-    }
+        values.clear();
+    }    
 
-    // living_category.ListVariables();
-    
-    if (Exercises.size() == 0) {
+    if (!Exercises.size()) {
         Log("No exercises were registered", 8);
         ON_KEY_CLS();
         return 0;
     }
     
     /* POST COMPILATION */
-
+    
     compile_extensions("post_compilation");
     
     /* START SCREEN */
+    
     RESET_COLORS();
     compile_extensions("post_start_screen");
     RESET_COLORS();
@@ -150,7 +184,6 @@ int main (void) {
         }
         
         while (not finished) {
-            
             /* Begin Exercise Block */
             UTIL::espeak(current_exercise->name);
             compile_extensions("post_exercise");
@@ -175,20 +208,16 @@ int main (void) {
                                 skipped = true;
                                 break;
                             }
-
                             if (elapsed != last) {
-                                // CLEAR();
-                                // bar("REPS: ", current_reps, current_exercise->reps);
-                                ClearScreen();
+                                ClearScreen(); CLEAR();
                                 bar("REPS: ", current_reps-1, current_exercise->reps, 11);
                                 bar("HOLD: ", elapsed, current_exercise->hold, 5);
-                            }
-                            
-                            );
+                            });
                         
                         if (skipped) break;
                     } else {
                         ClearScreen();
+                        CLEAR();
                         UTIL::espeak("Alternate", current_exercise->freestyle);
                         bar("REPS: ", current_reps, current_exercise->reps, 11);
                         SLEEP_TIME_FUNCTION(current_exercise->ahold, if (GetAsyncKeyState(0x39)){
@@ -223,8 +252,9 @@ int main (void) {
         compile_extensions("round_end");
     }
     
-    UTIL::espeak("Exercise finished, Excellent job");
-    
+    UTIL::espeak("Session finished");
+    Sleep(MS); UTIL::espeak("Excellent job");
+
     cin.get();
     return 0;
 }
@@ -244,7 +274,9 @@ void bar(const char* label, int a, int b, int c) {
     FLOOP(int, i, a) {
         sbar[i] = '#';
     }
-    sbar.append(" " + std::to_string(a) + "/" + std::to_string(b));
+    std::string a_c = std::to_string(a);
+    std::string b_c = std::to_string(b);
+    sbar.append(" " + a_c + "/" + b_c);
     cout << label << sbar << endl;
     RESET_COLORS();
 }

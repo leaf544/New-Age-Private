@@ -1,10 +1,16 @@
-#CHAR CATEGORY      MAIN
+#CHAR CATEGORY      BITCH
+#INT ROUNDS         1
+
+#INT DEFAULT_SETS       1
+#INT DEFAULT_REPS       15
+#INT DEFAULT_HOLD       20
+#INT DEFAULT_AHOLD      3
 
 %MAIN #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
 
-$Dead_Bug_Exercise                       1 F 15 22 3
+$Dead_Bug_Exercise                       1 F 15 20 3
 "Lower abdomen"
-$Glute_Bridge_Exercise                   1 F 15 22 4 NO_DISPLAY
+$Glute_Bridge_Exercise                   1 F 15 20 4 NO_DISPLAY
 "Glutes, Hamstrings, Hip flexors, Erector spinae"
 $Squat_Exercise                          1 F 12 15 4
 "Glutes, Hamstrings, Calves, Quads"
@@ -13,12 +19,6 @@ $Butterfly_Exercise                      1 T 12 20 3
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 "Hamstrings, Erector spinae"
 
-Lower abdomen: 1
-Glutes: 2
-Hip flexors: 2
-Hamstrings: 3
+%BITCH
 
-%TEST #INT ROUNDS 2
-
-$Infidel_Exercise         1 F 1 1 1
-$Nigga_Exercise           1 F 1 1 1
+$nigga  1 F 10 3 3
