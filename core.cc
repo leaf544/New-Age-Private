@@ -209,8 +209,8 @@ int main (void) {
                                 break;
                             }
                             if (elapsed != last) {
-                                ClearScreen(); CLEAR();
-                                bar("REPS: ", current_reps-1, current_exercise->reps, 11);
+                                ClearScreen();
+                                //bar("REPS: ", current_reps-1, current_exercise->reps, 11);
                                 bar("HOLD: ", elapsed, current_exercise->hold, 5);
                             });
                         
