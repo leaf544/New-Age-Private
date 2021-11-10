@@ -110,7 +110,7 @@ int main (void) {
             // DEBUG END
             if (category == FetchValue("CATEGORY") and values.size() > 1) {
                 // DEBUG BEG
-                cout << "Marked category: " << category << endl;
+                //cout << "Marked category: " << category << endl;
                 // DEBUG END
                 living_category.hasVariables = true;
                 values.erase(values.begin());
