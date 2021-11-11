@@ -240,15 +240,22 @@ int main (void) {
                         
                         if (skipped) break;
                     } else {
-                        ClearScreen();
+                        //ClearScreen();
                         CLEAR();
-                        UTIL::espeak("Alternate", current_exercise->freestyle);
                         bar("REPS: ", current_reps, current_exercise->reps, 11);
+                        UTIL::espeak("Alternate", current_exercise->freestyle);
                         SLEEP_TIME_FUNCTION(current_exercise->ahold, if (GetAsyncKeyState(0x39)){
                                 Log("Skipping..", 4);
                                 skipped = true;
                                 break;
-                            });
+                            }
+
+                            if (elapsed != last) {
+                                ClearScreen();
+                                bar("REPS: ", current_reps, current_exercise->reps, 11);
+                                bar("AHOLD: ", elapsed, current_exercise->ahold, 5);
+                            }
+                            );
                         
                         if (skipped) break;
                     }
