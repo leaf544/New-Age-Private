@@ -24,6 +24,9 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <limits.h>
 
 std::vector<Exercise> Exercises;
 Exercise* current_exercise = NULL;
@@ -69,10 +72,31 @@ int main (void) {
     info.dwSize = 100;
     info.bVisible = false;
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+
+    /* LOCATE .NEWAGE FILE */
+    
+    DIR* dir;
+    struct dirent* ent;
+    char cwd [PATH_MAX];
+    getcwd(cwd, sizeof(cwd));
+    char file_path [FILENAME_MAX];
+
+    if ((dir = opendir(cwd)) != NULL) {
+        while ((ent = readdir(dir)) != NULL) {
+            if (std::string(ent->d_name).find(".newage") != std::string::npos) {
+                strcpy(file_path, ent->d_name);
+            }
+        }
+        closedir(dir);
+    } else {
+        perror("");
+        return -1;
+    }
     
     /* COMPILE EXERCISES AND VARIABLES */
 
-    std::ifstream file(FILE_PATH);
+    
+    std::ifstream file(file_path);
     std::string category = "";
     std::vector<std::string> values;
     
