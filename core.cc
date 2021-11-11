@@ -243,6 +243,7 @@ int main (void) {
                         //ClearScreen();
                         CLEAR();
                         bar("REPS: ", current_reps, current_exercise->reps, 11);
+                        bar("AHOLD: ", 0, current_exercise->ahold, 5);
                         UTIL::espeak("Alternate", current_exercise->freestyle);
                         SLEEP_TIME_FUNCTION(current_exercise->ahold, if (GetAsyncKeyState(0x39)){
                                 Log("Skipping..", 4);
