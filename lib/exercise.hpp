@@ -50,6 +50,11 @@ public:
         this->hold = h;
         this->ahold = a;
     }
+
+    double CalculateTime () {
+        return (this->sets * (this->reps * (this->hold + this->ahold))) / 60.0F;
+        //return ((this->sets * (this->reps * this->hold) + (this->reps * ahold)) / 60);
+    }
     
     void Describe () {
         cout << "# Name: " << this->name << endl;
@@ -69,13 +74,11 @@ public:
         FOREGROUND_COLOR(240);
         cout << tmp << "  " << this->freestyle << "  " << this->sets << "  " << this->reps << "  " << this->hold << "  " << this->ahold << endl;
         RESET_COLORS();
+        cout << CalculateTime() << " minute(s)" << endl;
         cout << "[" << this->description << "]"<< endl;
     }
     
-    double CalculateTime () {
-        return (this->sets * (this->reps * (this->hold + this->ahold))) / 60.0F;
-        //return ((this->sets * (this->reps * this->hold) + (this->reps * ahold)) / 60);
-    }
+
     
 };
 

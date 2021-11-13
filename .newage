@@ -1,12 +1,6 @@
 #CHAR CATEGORY      MAIN
-#INT ROUNDS         1
 
-#INT DEFAULT_SETS       1
-#INT DEFAULT_REPS       15
-#INT DEFAULT_HOLD       20
-#INT DEFAULT_AHOLD      3
-
-%MAIN #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3 #INT LOW_MOOD 1
+%MAIN #INT ROUNDS 1 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
 
 $Dead_Bug_Exercise                       1 F 15 20 3
 "Lower abdomen"
@@ -16,6 +10,7 @@ $Squat_Exercise                          1 F 12 15 4
 "Glutes, Hamstrings, Calves, Quads"
 $Butterfly_Exercise                      1 T 12 20 3
 "Hip flexors"
+$Bird_Dog_Exercise                       1 F 12 20 3
+"Erector spinae"
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 "Hamstrings, Erector spinae"
-

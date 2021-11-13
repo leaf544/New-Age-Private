@@ -50,6 +50,7 @@ int DEFAULT_AHOLD = 0;
 using std::cout;
 using std::endl;
 using std::cin;
+using std::string;
 
 class Reader {
 public:
@@ -83,7 +84,7 @@ int main (void) {
 
     if ((dir = opendir(cwd)) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
-            if (std::string(ent->d_name).find(".newage") != std::string::npos) {
+            if (string(ent->d_name).find(".newage") != string::npos) {
                 strcpy(file_path, ent->d_name);
             }
         }
@@ -97,14 +98,14 @@ int main (void) {
 
     
     std::ifstream file(file_path);
-    std::string category = "";
-    std::vector<std::string> values;
+    string category = "";
+    std::vector<string> values;
     
     /* PRE COMPILATION  */ 
     
     bool variables_compiled = false;
     
-    for (std::string line; std::getline(file, line);) {
+    for (string line; std::getline(file, line);) {
         if (!line.size()) continue;
         values = UTIL::split_string(line.substr(1, line.length()), " ");
         // DEBUG BEG
@@ -118,13 +119,11 @@ int main (void) {
             Variables[values[1]] = values[2];
             break;
         case CATEGORY_MARKER:
-
             // DEBUG BEG
             // for (auto it = Variables.begin(); it != Variables.end(); it++) {
             //     cout << "IDEN: " << it->first << " / " << "VALUE: " << it->second << endl;
             // }
             // DEBUG END
-            
             variables_compiled = true;
             category = values[0];
             // DEBUG BEG
@@ -266,7 +265,7 @@ int main (void) {
             }
 
             CLEAR();
-            UTIL::espeak(std::string(current_exercise->name).append(" Finished"));
+            UTIL::espeak(string(current_exercise->name).append(" Finished"));
             UTIL::espeak("Take a break");
 
             if (reader.i == reader.limit - 1) {
@@ -276,6 +275,7 @@ int main (void) {
                 current_exercise = reader.at(reader.i);
                 //cout << "# Next Exercise" << endl;
                 current_exercise->Describe2();
+                cout << endl << "Press any key to proceed to next exercise" << endl;
                 ON_KEY_CLS();
             }
         }
@@ -291,23 +291,23 @@ int main (void) {
     return 0;
 }
 
-std::string FetchValue (std::string iden) {
+string FetchValue (string iden) {
     return Variables[iden] != "" ? Variables[iden] : "0";
 }
 
-int FetchValueInt (std::string iden) {
+int FetchValueInt (string iden) {
     return atoi(FetchValue(iden).c_str());
 }
 
 void bar(const char* label, int a, int b, int c) {
     FOREGROUND_COLOR(c);
     //CLEAR();
-    std::string sbar(b, ' ');
+    string sbar(b, ' ');
     FLOOP(int, i, a) {
         sbar[i] = '#';
     }
-    std::string a_c = std::to_string(a);
-    std::string b_c = std::to_string(b);
+    string a_c = std::to_string(a);
+    string b_c = std::to_string(b);
     sbar.append(" " + a_c + "/" + b_c);
     cout << label << sbar << endl;
     RESET_COLORS();
@@ -320,3 +320,5 @@ void ClearScreen () {
     cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
+
+//inexplicabro#1568

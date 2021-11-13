@@ -102,5 +102,3 @@ $Some_Other_Exercise    1 F 12 20 5
 Now that you have the bare minimum set up, running your NewAge should get you something that looks like this: https://imgur.com/a/rzO9dQJ
 
 3. FUNCTIONALITY AND BEHAVIOUR ALTERATION WITH SPECIAL SPECIFIERS
-
-// coming soon im lazy
