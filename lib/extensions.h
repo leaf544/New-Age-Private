@@ -161,7 +161,7 @@ void handle_decrease () {
 
 void handle_trim (){
     if ((DETERMINE_VALUE("TRIM", FetchValueInt))) {
-        Exercises.erase(Exercises.begin());
+        Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("TRIM", FetchValueInt)));
     }
 }
 

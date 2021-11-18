@@ -1,7 +1,6 @@
-#CHAR CATEGORY      TEST
-#BOOL TRIM 1
+#CHAR CATEGORY      DOM
 
-%DOM #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
+%DOM #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3 #INT TRIM 1
 
 $Dead_Bug_Exercise                       1 F 12 20 3
 "Lower abdomen"
@@ -27,7 +26,8 @@ $Squat_Exercise                          1 F 12 15 4
 $Triangle_Calf_Stretch_Exercise          1 T 12 20 3 DISPLAY
 "Gastrocnemius, Is skippable"
 
-%TEST #INT ROUNDS 2
+%TEST #INT ROUNDS 2 #INT TRIM 2
 
 $Nigga_Exercise 1 F 1 1 1
 $Bitch_Exercise 1 F 1 1 1
+$Fuck_Exercise 1 F 1 1 1

@@ -35,7 +35,6 @@
 #define FLOOPS(t, it, v,  n) for(t it = v; it < n; it++)
 
 #define CSTRING_EQUAL 0
-#define IGNORE 1400
 #define MS 1000
 
 /* NEW AGE RELATED MACROS */
