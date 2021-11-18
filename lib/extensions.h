@@ -138,6 +138,12 @@ void display_exercise_image () {
         std::string cmd = "start " + std::string(FILE_PNGS_PATH) + std::string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
         system(cmd.c_str());
     }
+    if (current_exercise->tags.find("DISPLAY") != std::string::npos) {
+        std::string png (current_exercise->name);
+        png.append(".png");
+        std::string cmd = "start " + std::string(FILE_PNGS_PATH) + std::string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
+        system(cmd.c_str()); 
+    }
 }
 
 /* POST ROUND */
@@ -150,6 +156,12 @@ void handle_decrease () {
         for (auto& exer : Exercises) {
             exer.reps -= decrease;
         }
+    }
+}
+
+void handle_trim (){
+    if ((DETERMINE_VALUE("TRIM", FetchValueInt))) {
+        Exercises.erase(Exercises.begin());
     }
 }
 
@@ -177,7 +189,8 @@ std::vector<std::pair<std::string, void(*)(void)>> Extensions = {
     //// POST EXERCISE ////
     PUSH_EXTENSION("post_exercise", &display_exercise_image),
     //// POST ROUND END ////
-    PUSH_EXTENSION("round_end", &handle_decrease)
+    PUSH_EXTENSION("round_end", &handle_decrease),
+    PUSH_EXTENSION("round_end", &handle_trim)
 };
 
 void compile_extensions (std::string group) {

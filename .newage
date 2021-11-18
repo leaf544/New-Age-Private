@@ -1,16 +1,33 @@
-#CHAR CATEGORY      MAIN
+#CHAR CATEGORY      TEST
+#BOOL TRIM 1
 
-%MAIN #INT ROUNDS 1 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
+%DOM #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
 
-$Dead_Bug_Exercise                       1 F 15 20 3
+$Dead_Bug_Exercise                       1 F 12 20 3
 "Lower abdomen"
-$Glute_Bridge_Exercise                   1 F 15 20 4 NO_DISPLAY
+$Glute_Bridge_Exercise                   1 F 15 20 3
 "Glutes, Hamstrings, Hip flexors, Erector spinae"
 $Squat_Exercise                          1 F 12 15 4
 "Glutes, Hamstrings, Calves, Quads"
 $Butterfly_Exercise                      1 T 12 20 3
 "Hip flexors"
-$Bird_Dog_Exercise                       1 F 12 20 3
-"Erector spinae"
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 "Hamstrings, Erector spinae"
+$Triangle_Calf_Stretch_Exercise          1 T 12 20 3 DISPLAY
+"Gastrocnemius, Is skippable"
+
+%STRETCHES #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
+
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+$Butterfly_Exercise                      1 T 12 20 3
+"Hip flexors"
+$Squat_Exercise                          1 F 12 15 4
+"Glutes, Hamstrings, Calves, Quads"
+$Triangle_Calf_Stretch_Exercise          1 T 12 20 3 DISPLAY
+"Gastrocnemius, Is skippable"
+
+%TEST #INT ROUNDS 2
+
+$Nigga_Exercise 1 F 1 1 1
+$Bitch_Exercise 1 F 1 1 1
