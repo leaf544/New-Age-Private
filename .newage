@@ -12,8 +12,8 @@ $Butterfly_Exercise                      1 T 12 20 3
 "Hip flexors"
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 "Hamstrings, Erector spinae"
-$Triangle_Calf_Stretch_Exercise          1 T 12 20 3 DISPLAY
-"Gastrocnemius, Is skippable"
+$Table_Hold_Exercise                     1 T 12 20 3 DISPLAY
+"Gastrocnemius"
 
 %STRETCHES #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
 

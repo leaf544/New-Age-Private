@@ -43,17 +43,17 @@ extern int FetchValueInt (std::string);
 
 /* POST COMPILATION EXTENSIONS */
 
-void reverse_exercises () {
+EXTENSION reverse_exercises () {
     if (DETERMINE_VALUE("REVERSE", FetchValueInt)) {
         std::reverse(Exercises.begin(), Exercises.end());
     }
 }
 
-void handle_start () {
+EXTENSION handle_start () {
     Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("START", FetchValueInt)));
 }
 
-void on_mood () {
+EXTENSION on_mood () {
     if (DETERMINE_VALUE("LOW_MOOD", FetchValueInt)) {
         for (auto& exer : Exercises) {
             exer.reps = 12;
@@ -61,7 +61,7 @@ void on_mood () {
     }
 }
 
-void handle_offsets () {
+EXTENSION handle_offsets () {
     for (auto& exer : Exercises) {
         exer.sets += (DETERMINE_VALUE("SETS_OFFSET", FetchValueInt));
         exer.reps += (DETERMINE_VALUE("REPS_OFFSET", FetchValueInt));
@@ -70,13 +70,13 @@ void handle_offsets () {
     }
 }
 
-void init () {
+EXTENSION init () {
     cout << (DETERMINE_VALUE("DISPLAY", FetchValueInt)) << endl;
 }
 
 /* POST START SCREEN EXTENSIONS */
 
-void calculate_total_session_time () {
+EXTENSION calculate_total_session_time () {
     // This extension calculates the total amount of time it takes to continue an exercise session
     FOREGROUND_COLOR(13);
     double total_time = 0.00;
@@ -90,7 +90,7 @@ void calculate_total_session_time () {
     RESET_COLORS();
 }
 
-void calculate_total_session_reps () {
+EXTENSION calculate_total_session_reps () {
     // This extension calculates the total amount of reps in a session
     FOREGROUND_COLOR(6);
     int total_reps = 0;
@@ -102,13 +102,13 @@ void calculate_total_session_reps () {
     RESET_COLORS();
 }
 
-void n_exercises () {
+EXTENSION n_exercises () {
     FOREGROUND_COLOR(8);
     cout << "N: " << Exercises.size() << endl;
     RESET_COLORS();
 }
 
-void display_variables () {
+EXTENSION display_variables () {
     int colors = 0;
     RESET_COLORS(); // Just in case, evaluate later
     if (living_category.Variables.size()) {
@@ -124,13 +124,13 @@ void display_variables () {
     }
 }
 
-void display_info () {
+EXTENSION display_info () {
     Log("Hello from display_info", 6);
 }
 
 /* POST EXERCISE EXTENSIONS */
 
-void display_exercise_image () {
+EXTENSION display_exercise_image () {
     // This extension displays a visual representation of the current exercise at hand
     if ((DETERMINE_VALUE("DISPLAY", FetchValueInt)) and current_exercise->tags.find("NO_DISPLAY") == std::string::npos) {
         std::string png (current_exercise->name);
@@ -148,7 +148,7 @@ void display_exercise_image () {
 
 /* POST ROUND */
 
-void handle_decrease () {
+EXTENSION handle_decrease () {
     int rounds = (DETERMINE_VALUE("ROUNDS", FetchValueInt));
     int decrease = (DETERMINE_VALUE("DECREASE", FetchValueInt));
 
@@ -159,13 +159,13 @@ void handle_decrease () {
     }
 }
 
-void handle_trim (){
+EXTENSION handle_trim (){
     if ((DETERMINE_VALUE("TRIM", FetchValueInt))) {
         Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("TRIM", FetchValueInt)));
     }
 }
 
-// void multi_round_session () {
+// EXTENSION multi_round_session () {
 //     if ((DETERMINE_VALUE("ROUNDS", FetchValueInt)) > 1 and current_exercise->tags.find("NO_NEG") == std::string::npos) {
 //         for (auto& exer : Exercises) {
 //             exer.reps -= (DETERMINE_VALUE("NEG", FetchValueInt));

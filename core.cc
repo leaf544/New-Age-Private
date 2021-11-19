@@ -200,7 +200,9 @@ int main (void) {
                 current_exercise->Describe();
                 ON_KEY_CLS();
             }
-        
+
+            // RB
+            
             while (not finished) {
                 /* Begin Exercise Block */
                 UTIL::espeak(current_exercise->name);
@@ -276,6 +278,7 @@ int main (void) {
             }
             /* Round End Block */
             finished = false;
+            // RE
             compile_extensions("round_end");
         }
     }
