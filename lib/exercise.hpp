@@ -78,7 +78,15 @@ public:
         cout << "[" << this->description << "]"<< endl;
     }
     
-
+    void Describe3 () {
+        std::string tmp = this->name;
+        std::replace(tmp.begin(), tmp.end(), '_', ' ');
+        FOREGROUND_COLOR(7);
+        cout << tmp << "  " << this->freestyle << "  " << this->sets << "  " << this->reps << "  " << this->hold << "  " << this->ahold << endl;
+        RESET_COLORS();
+        cout << CalculateTime() << " minute(s)" << endl;
+        cout << "[" << this->description << "]"<< endl;
+    }
     
 };
 

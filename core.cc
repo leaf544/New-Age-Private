@@ -189,34 +189,47 @@ int main (void) {
     
     bool finished = false;
 
+    bool eye_of_elohim = (DETERMINE_VALUE("EYE", FetchValueInt));
+    
     FLOOP (int, RUN, run_iteration) {
         FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchValueInt))) {
+
+            if (eye_of_elohim) {
+                FOREGROUND_COLOR(2);
+                cout << "INITIAL ROUND BEGIN: " << endl;
+                RESET_COLORS();
+                for (auto& val : Exercises) {
+                    val.Describe3();
+                    cout << endl;
+                }
+            }
+            
             RESET_COLORS();
             exercise_reader.set(0);
             current_exercise = exercise_reader.at(0);
             exercise_reader.attatch(&Exercises);
         
-            if (ROUNDS > 0) {
-                current_exercise->Describe();
+            if (ROUNDS > 0 && !eye_of_elohim) {
+                current_exercise->Describe2();
                 ON_KEY_CLS();
             }
-
+            
             // RB
             
-            while (not finished) {
+            while (not finished && !eye_of_elohim) {
                 /* Begin Exercise Block */
                 UTIL::espeak(current_exercise->name);
                 compile_extensions("post_exercise");
                 /* End Exercise Block */
-            
-                FLOOP (int, SETS, current_exercise->sets) {
+                
+                FLOOP (int, SETS, (current_exercise->sets) * (!eye_of_elohim)) {
                     /* Begin Sets Block */
                     bool alternate = false;
                     bool skipped = false;
                     int  current_reps = 0;
                     Sleep((DETERMINE_VALUE("RDELAY", FetchValueInt)) * MS);
                     /* End Sets Block */
-                    FLOOP (int, REPS, current_exercise->reps * 2) {
+                    FLOOP (int, REPS, (current_exercise->reps * 2) * (!eye_of_elohim)) {
                         if (not alternate) {
                             ClearScreen();
                             bar("REPS: ", current_reps, current_exercise->reps, 11);
@@ -264,7 +277,7 @@ int main (void) {
                 CLEAR();
                 UTIL::espeak(string(current_exercise->name).append(" Finished"));
                 UTIL::espeak("Take a break");
-
+                
                 if (exercise_reader.i == exercise_reader.limit - 1) {
                     finished = true;
                 } else {
@@ -280,6 +293,18 @@ int main (void) {
             finished = false;
             // RE
             compile_extensions("round_end");
+
+            if (eye_of_elohim) {
+                FOREGROUND_COLOR(2);
+                cout << "INITIAL ROUND END, JUMPING INTO NEXT ROUND: " << endl;
+                RESET_COLORS();
+                for (auto& val : Exercises) {
+                    val.Describe3();
+                    cout << endl;
+                }
+                ON_KEY_CLS();
+            }
+            
         }
     }
 
