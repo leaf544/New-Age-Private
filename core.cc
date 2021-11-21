@@ -29,30 +29,32 @@
 #include <unistd.h>
 #include <limits.h>
 
+using std::cout;
+using std::endl;
+using std::cin;
+using std::string;
+using std::vector;
+using std::map;
+
 int run_iteration = 1;
-std::vector<Exercise> Exercises;
+vector<Exercise> Exercises;
 Exercise* current_exercise = NULL;
 Category living_category;
-std::map<std::string, std::string> Variables;
+map<string, string> Variables;
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-std::string FetchValue (std::string);
-int FetchValueInt (std::string);
+string FetchValue (string);
+int FetchValueInt (string);
 void bar (const char*, int, int, int);
 void ClearScreen ();
 
 /* DEFAULTS */
 
 int DEFAULT_SETS = 0;
-int DEFAULT_FREESTYLE = 0;
+char DEFAULT_FREESTYLE;
 int DEFAULT_REPS = 0;
 int DEFAULT_HOLD = 0;
 int DEFAULT_AHOLD = 0;
-
-using std::cout;
-using std::endl;
-using std::cin;
-using std::string;
 
 int main (void) {
     
@@ -89,12 +91,12 @@ int main (void) {
     
     std::ifstream file(file_path);
     string category = "";
-    std::vector<string> values;
+    vector<string> values;
     
     /* PRE COMPILATION  */ 
     
     bool variables_compiled = false;
-    std::vector<string> lines;    
+    vector<string> lines;    
     
     for (string line; std::getline(file, line);) {
         if (!line.size()) continue;
@@ -144,10 +146,9 @@ int main (void) {
             if (Exercises.size() and category == FetchValue("CATEGORY")) Exercises.back().description = current_line.substr(1, current_line.length() - 2);
             break;
         }
-        
         if (variables_compiled) {
             DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchValueInt));
-            DEFAULT_FREESTYLE = (DETERMINE_VALUE("DEFAULT_FREESTYLE", FetchValueInt));
+            DEFAULT_FREESTYLE = FetchValue("DEFAULT_FREESTYLE")[0];
             DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchValueInt));
             DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchValueInt));
             DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchValueInt));
@@ -168,10 +169,13 @@ int main (void) {
     }
     
     /* POST COMPILATION */
-    
+        
     compile_extensions("post_compilation");
     
     /* START SCREEN */
+    
+    FOREGROUND_COLOR(FetchValue("CATEGORY").length() + abs((int)FetchValue("CATEGORY")[0] - (int)FetchValue("CATEGORY")[1]));
+    cout << FetchValue("CATEGORY") << endl;
     
     RESET_COLORS();
     compile_extensions("post_start_screen");
@@ -189,7 +193,7 @@ int main (void) {
     
     bool finished = false;
 
-    bool eye_of_elohim = (DETERMINE_VALUE("EYE", FetchValueInt));
+    bool eye_of_elohim = (DETERMINE_VALUE("EYE_OF_GOD", FetchValueInt));
     
     FLOOP (int, RUN, run_iteration) {
         FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchValueInt))) {
@@ -228,6 +232,7 @@ int main (void) {
                     bool skipped = false;
                     int  current_reps = 0;
                     Sleep((DETERMINE_VALUE("RDELAY", FetchValueInt)) * MS);
+                    if (current_exercise->freestyle == 'T') UTIL::espeak("Begin");
                     /* End Sets Block */
                     FLOOP (int, REPS, (current_exercise->reps * 2) * (!eye_of_elohim)) {
                         if (not alternate) {
@@ -283,7 +288,6 @@ int main (void) {
                 } else {
                     exercise_reader.progress();
                     current_exercise = exercise_reader.at(exercise_reader.i);
-                    //cout << "# Next Exercise" << endl;
                     current_exercise->Describe2();
                     cout << endl << "Press any key to proceed to next exercise" << endl;
                     ON_KEY_CLS();
@@ -296,7 +300,7 @@ int main (void) {
 
             if (eye_of_elohim) {
                 FOREGROUND_COLOR(2);
-                cout << "INITIAL ROUND END, JUMPING INTO NEXT ROUND: " << endl;
+                cout << "JUMPING INTO NEXT ROUND: " << endl;
                 RESET_COLORS();
                 for (auto& val : Exercises) {
                     val.Describe3();
@@ -345,4 +349,3 @@ void ClearScreen () {
     cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
-

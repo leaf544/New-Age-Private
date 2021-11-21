@@ -29,17 +29,21 @@
 
 using std::cout; 
 using std::endl;
+using std::string;
+using std::vector;
+using std::map;
 
 #define PUSH_EXTENSION(seg, func) std::pair<std::string, void(*)(void)>(seg, func)
+#define EXTENSION void
 
-extern std::vector<Exercise> Exercises;
+extern vector<Exercise> Exercises;
 extern Exercise* current_exercise;
-extern std::map<std::string, std::string> Variables;
+extern map<std::string, std::string> Variables;
 extern Category living_category;
 extern HANDLE hConsole;
 
-extern std::string FetchValue (std::string);
-extern int FetchValueInt (std::string);
+extern string FetchValue (string);
+extern int FetchValueInt (string);
 
 /* POST COMPILATION EXTENSIONS */
 
@@ -84,8 +88,8 @@ EXTENSION calculate_total_session_time () {
         total_time += exer.CalculateTime();
     }
     total_time *= DETERMINE_VALUE("ROUNDS", FetchValueInt);
-    std::cout << std::fixed;
-    std::cout << std::setprecision(2);
+    cout << std::fixed;
+    cout << std::setprecision(2);
     cout << "T: " << total_time << " minutes" << endl;
     RESET_COLORS();
 }
@@ -133,15 +137,15 @@ EXTENSION display_info () {
 EXTENSION display_exercise_image () {
     // This extension displays a visual representation of the current exercise at hand
     if ((DETERMINE_VALUE("DISPLAY", FetchValueInt)) and current_exercise->tags.find("NO_DISPLAY") == std::string::npos) {
-        std::string png (current_exercise->name);
+        string png (current_exercise->name);
         png.append(".png");
-        std::string cmd = "start " + std::string(FILE_PNGS_PATH) + std::string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
+        string cmd = "start " + string(FILE_PNGS_PATH) + string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
         system(cmd.c_str());
     }
     if (current_exercise->tags.find("DISPLAY") != std::string::npos) {
-        std::string png (current_exercise->name);
+        string png (current_exercise->name);
         png.append(".png");
-        std::string cmd = "start " + std::string(FILE_PNGS_PATH) + std::string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
+        string cmd = "start " + string(FILE_PNGS_PATH) + string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
         system(cmd.c_str()); 
     }
 }
@@ -159,7 +163,8 @@ EXTENSION handle_decrease () {
     }
 }
 
-EXTENSION handle_trim (){
+
+EXTENSION handle_trim () {
     if ((DETERMINE_VALUE("TRIM", FetchValueInt))) {
         Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("TRIM", FetchValueInt)));
     }
@@ -174,7 +179,7 @@ EXTENSION handle_trim (){
 //     }
 // }
 
-std::vector<std::pair<std::string, void(*)(void)>> Extensions = {
+vector<std::pair<string, void(*)(void)>> Extensions = {
     //// POST COMPILATION ////
     PUSH_EXTENSION("post_compilation", &reverse_exercises),
     PUSH_EXTENSION("post_compilation", &handle_start),
@@ -190,10 +195,10 @@ std::vector<std::pair<std::string, void(*)(void)>> Extensions = {
     PUSH_EXTENSION("post_exercise", &display_exercise_image),
     //// POST ROUND END ////
     PUSH_EXTENSION("round_end", &handle_decrease),
-    PUSH_EXTENSION("round_end", &handle_trim)
+    PUSH_EXTENSION("round_end", &handle_trim)   
 };
 
-void compile_extensions (std::string group) {
+void compile_extensions (string group) {
     for (auto& p :Extensions) {
         if (p.first == group) {
             p.second();

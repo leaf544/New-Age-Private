@@ -1,0 +1,12 @@
+%DOM_1 #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3 #INT TRIM 1
+
+$Dead_Bug_Exercise                       1 F 15 20 3
+"Lower abdomen"
+$Glute_Bridge_Exercise                   1 F 15 20 3
+"Glutes, Hamstrings, Hip flexors, Erector spinae"
+$Butterfly_Exercise                      1 T 12 20 3
+"Hip flexors"
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+$Table_Hold_Exercise                     1 T 10 20 3 DISPLAY
+"Gastrocnemius"
