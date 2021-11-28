@@ -26,7 +26,8 @@ public:
     int ahold;
     std::string tags;
     std::string description;
-
+    int pos;
+    
     // Instantiated constructor
 
     Exercise () {}
@@ -42,13 +43,14 @@ public:
     }
     
     // Constructor with options
-    Exercise (std::string n, char f, int s, int r, int h, int a) {
+    Exercise (std::string n, char f, int s, int r, int h, int a, int p) {
         this->name= n;
         this->freestyle = f;
         this->sets = s;
         this->reps = r;
         this->hold = h;
         this->ahold = a;
+        this->pos = p;
     }
 
     double CalculateTime () {

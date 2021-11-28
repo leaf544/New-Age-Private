@@ -1,3 +1,6 @@
+#ifndef UTIL_H
+#define UTIL_H
+
 /* STD */
 #include <iostream>
 #include <string>
@@ -14,9 +17,6 @@
 
 using std::cout;
 using std::endl;
-
-#ifndef UTIL_H
-#define UTIL_H
 
 namespace UTIL {
     

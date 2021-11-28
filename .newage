@@ -1,52 +1,28 @@
 #CHAR CATEGORY      DOM
 
-#INT EYE_OF_GOD     1
+#BOOL EYE_OF_GOD     0
+#BOOL FLARE          0
 
-// FOR FAT 
-#INT DEFAULT_FREESTYLE      T
-#INT DEFAULT_SETS           1
-#INT DEFAULT_REPS           15
-#INT DEFAULT_HOLD           20
-#INT DEFAULT_AHOLD          3
-
-%DOM #INT ROUNDS 1 #INT RDELAY 1 #INT START 0 #BOOL SET 1 #INT TRIM 2 #BOOL DECREASE 3
+%DOM #INT START 0 #INT ROUNDS 1 #INT TRIM 1 #INT DECREASE 3 #BOOL DISPLAY 0 #INT RDELAY 2
 
 $Dead_Bug_Exercise                       1 F 15 20 3
-"Lower abdomen"
+"Lower abdomen, Hip flexors"
 $Glute_Bridge_Exercise                   1 F 15 20 3
 "Glutes, Hamstrings, Hip flexors, Erector spinae"
-$Cobra_Stretch_Exercise                  1 F 12 20 3 DISPLAY
+$Cobra_Stretch_Exercise                  1 F 15 20 3
 "Erector spinae, Glutes, Core"
 $Butterfly_Exercise                      1 T 12 20 3
 "Hip flexors"
 $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 "Hamstrings, Erector spinae"
-$Table_Hold_Exercise                     1 T 8 20 3 DISPLAY
-"Gastrocnemius"
+$Sitting_Hamstring_Stretch_Exercise      1 F 15 20 4
+"Hamstrings"
 
-%FAT #INT ROUNDS 1 #INT RDELAY 1 #INT START 0
+%STRETCHES
 
-$Jumping_Jack_Exercise
-$Mountain_Climber_Exercise
-
-%STRETCHES #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
-
-$Cobra_Stretch_Exercise                  1 F 12 20 3 DISPLAY
-"Erector spinae"
-$Dead_Bug_Exercise                       1 F 15 20 3
-"Lower abdomen"
-$Glute_Bridge_Exercise                   1 F 15 20 3
-"Glutes, Hamstrings, Hip flexors, Erector spinae"
-$Butterfly_Exercise                      1 T 12 20 3
+$Sitting_Hamstring_Stretch_Exercise      1 F 20 20 4 F
+"Hamstrings"
+$Butterfly_Exercise                      1 T 20 20 3
 "Hip flexors"
-$Single_Leg_Deadlift_Exercise            1 F 15 20 3
-"Hamstrings, Erector spinae"
-$Table_Hold_Exercise                     1 T 10 20 3 DISPLAY
+$Table_Hold_Exercise                     1 T 15 20 3 DISPLAY
 "Gastrocnemius"
-
-
-%TEST #INT ROUNDS 1
-
-$Nigga_Exercise 2 F 1 1 1 SETS_DECREASE 2
-$Bitch_Exercise 1 F 1 1 1
-$Fuck_Exercise 1 F 1 1 1

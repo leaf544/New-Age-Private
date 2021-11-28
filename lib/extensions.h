@@ -12,6 +12,8 @@
 #include <fstream>
 #include <utility>
 #include <iomanip>
+#include <functional>
+#include <algorithm>
 
 /* LIB */
 #include "macros.h"
@@ -141,12 +143,20 @@ EXTENSION display_exercise_image () {
         png.append(".png");
         string cmd = "start " + string(FILE_PNGS_PATH) + string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
         system(cmd.c_str());
+        system("cls");
     }
     if (current_exercise->tags.find("DISPLAY") != std::string::npos) {
         string png (current_exercise->name);
         png.append(".png");
         string cmd = "start " + string(FILE_PNGS_PATH) + string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
-        system(cmd.c_str()); 
+        system(cmd.c_str());
+        system("cls");
+    }
+}
+
+EXTENSION on_focus () {
+    if (current_exercise->tags.find("F") != string::npos) {
+        Exercises.erase(Exercises.begin() + current_exercise->pos, Exercises.end());
     }
 }
 
@@ -193,6 +203,7 @@ vector<std::pair<string, void(*)(void)>> Extensions = {
     PUSH_EXTENSION("post_start_screen", &display_variables),
     //// POST EXERCISE ////
     PUSH_EXTENSION("post_exercise", &display_exercise_image),
+    PUSH_EXTENSION("post_exercise", &on_focus),
     //// POST ROUND END ////
     PUSH_EXTENSION("round_end", &handle_decrease),
     PUSH_EXTENSION("round_end", &handle_trim)   

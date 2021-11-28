@@ -1,0 +1,27 @@
+
+%FAT #INT ROUNDS 1 #INT RDELAY 1 #INT START 0
+
+$Jumping_Jack_Exercise
+$Mountain_Climber_Exercise
+
+%STRETCHES #INT ROUNDS 2 #INT RDELAY 1 #INT START 0 #INT DECREASE 3
+
+$Cobra_Stretch_Exercise                  1 F 12 20 3 DISPLAY
+"Erector spinae"
+$Dead_Bug_Exercise                       1 F 15 20 3
+"Lower abdomen"
+$Glute_Bridge_Exercise                   1 F 15 20 3
+"Glutes, Hamstrings, Hip flexors, Erector spinae"
+$Butterfly_Exercise                      1 T 12 20 3
+"Hip flexors"
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+$Table_Hold_Exercise                     1 T 10 20 3 DISPLAY
+"Gastrocnemius"
+
+
+%TEST #INT ROUNDS 1
+
+$Nigga_Exercise 2 F 1 1 1 SETS_DECREASE 2
+$Bitch_Exercise 1 F 1 1 1
+$Fuck_Exercise 1 F 1 1 1

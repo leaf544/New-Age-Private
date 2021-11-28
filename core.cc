@@ -133,7 +133,10 @@ int main (void) {
                                              (values.size() > 1) == false ? DEFAULT_SETS : CATOI(values[1]), 
                                              (values.size() > 3) == false ? DEFAULT_REPS : CATOI(values[3]), 
                                              (values.size() > 4) == false ? DEFAULT_HOLD : CATOI(values[4]), 
-                                             (values.size() > 5) == false ? DEFAULT_AHOLD : CATOI(values[5])));
+                                             (values.size() > 5) == false ? DEFAULT_AHOLD : CATOI(values[5]),
+                                             Exercises.size()
+                                             )
+                                    );
 
                 if (values.size() > 6) {
                     FLOOPS (int, i, 6, values.size()) {
@@ -231,7 +234,10 @@ int main (void) {
                     bool alternate = false;
                     bool skipped = false;
                     int  current_reps = 0;
-                    Sleep((DETERMINE_VALUE("RDELAY", FetchValueInt)) * MS);
+                    // (DETERMINE_VALUE("DISPLAY", FetchValueInt))
+                    bool on = !((DETERMINE_VALUE("DISPLAY", FetchValueInt)) || current_exercise->tags.find("DISPLAY") != string::npos);
+                    int wait = ((DETERMINE_VALUE("RDELAY", FetchValueInt)) * MS) * on;
+                    Sleep(wait);
                     if (current_exercise->freestyle == 'T') UTIL::espeak("Begin");
                     /* End Sets Block */
                     FLOOP (int, REPS, (current_exercise->reps * 2) * (!eye_of_elohim)) {
@@ -241,6 +247,15 @@ int main (void) {
                             bar("HOLD: ", 0, current_exercise->hold, 5);
                             current_reps++;
                             UTIL::espeak(std::to_string(current_reps), current_exercise->freestyle);
+
+                            // shame on you
+                            
+                            if ((DETERMINE_VALUE("FLARE", FetchValueInt))) {
+                                system("color 1a");
+                                Sleep(75);
+                                system("color 7");
+                            }
+                            
                             SLEEP_TIME_FUNCTION(current_exercise->hold, if (GetAsyncKeyState(0x39)){
                                     Log("Skipping..", 4);
                                     skipped = true;
@@ -251,7 +266,7 @@ int main (void) {
                                     bar("REPS: ", current_reps-1, current_exercise->reps, 11);
                                     bar("HOLD: ", elapsed, current_exercise->hold, 5);
                                 });
-                        
+                            
                             if (skipped) break;
                         } else {
                             //ClearScreen();

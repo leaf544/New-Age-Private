@@ -27,6 +27,7 @@
 #define FLOOPS(t, it, v,  n) for(t it = v; it < n; it++)
 
 #define MS 1000
+#define MMS 100
 
 /* NEW AGE RELATED MACROS */
 
