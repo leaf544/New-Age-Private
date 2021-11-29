@@ -3,20 +3,22 @@
 #BOOL EYE_OF_GOD     0
 #BOOL FLARE          0
 
-%DOM #INT START 0 #INT ROUNDS 1 #INT TRIM 1 #INT DECREASE 3 #BOOL DISPLAY 0 #INT RDELAY 2
+#INT REPS_OFFSET     5 2
 
-$Dead_Bug_Exercise                       1 F 15 20 3
-"Lower abdomen, Hip flexors"
-$Glute_Bridge_Exercise                   1 F 15 20 3
-"Glutes, Hamstrings, Hip flexors, Erector spinae"
-$Cobra_Stretch_Exercise                  1 F 15 20 3
-"Erector spinae, Glutes, Core"
-$Butterfly_Exercise                      1 T 12 20 3
-"Hip flexors"
-$Single_Leg_Deadlift_Exercise            1 F 15 20 3
-"Hamstrings, Erector spinae"
-$Sitting_Hamstring_Stretch_Exercise      1 F 15 20 4
-"Hamstrings"
+%DOM #INT START 0 #INT ROUNDS 1 #INT RDELAY 2
+
+// $Dead_Bug_Exercise                       1 F 15 20 3
+// "Lower abdomen, Hip flexors"
+// $Glute_Bridge_Exercise                   1 F 15 20 3
+// "Glutes, Hamstrings, Hip flexors, Erector spinae"
+// $Cobra_Stretch_Exercise                  1 F 15 20 3
+// "Erector spinae, Glutes, Core"
+// $Butterfly_Exercise                      1 T 12 20 3
+// "Hip flexors"
+// $Single_Leg_Deadlift_Exercise            1 F 15 20 3
+// "Hamstrings, Erector spinae"
+// $Sitting_Hamstring_Stretch_Exercise      1 F 20 20 4
+// "Hamstrings"
 
 %STRETCHES
 

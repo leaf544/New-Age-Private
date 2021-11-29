@@ -44,23 +44,23 @@ extern map<std::string, std::string> Variables;
 extern Category living_category;
 extern HANDLE hConsole;
 
-extern string FetchValue (string);
-extern int FetchValueInt (string);
+extern string FetchDomRaw (string);
+extern int FetchDomInt (string);
 
 /* POST COMPILATION EXTENSIONS */
 
 EXTENSION reverse_exercises () {
-    if (DETERMINE_VALUE("REVERSE", FetchValueInt)) {
+    if (DETERMINE_VALUE("REVERSE", FetchDomInt)) {
         std::reverse(Exercises.begin(), Exercises.end());
     }
 }
 
 EXTENSION handle_start () {
-    Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("START", FetchValueInt)));
+    Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("START", FetchDomInt)));
 }
 
 EXTENSION on_mood () {
-    if (DETERMINE_VALUE("LOW_MOOD", FetchValueInt)) {
+    if (DETERMINE_VALUE("LOW_MOOD", FetchDomInt)) {
         for (auto& exer : Exercises) {
             exer.reps = 12;
         }
@@ -69,15 +69,15 @@ EXTENSION on_mood () {
 
 EXTENSION handle_offsets () {
     for (auto& exer : Exercises) {
-        exer.sets += (DETERMINE_VALUE("SETS_OFFSET", FetchValueInt));
-        exer.reps += (DETERMINE_VALUE("REPS_OFFSET", FetchValueInt));
-        exer.hold += (DETERMINE_VALUE("HOLD_OFFSET", FetchValueInt));
-        exer.ahold += (DETERMINE_VALUE("AHOLD_OFFSET", FetchValueInt));
+        exer.sets += (DETERMINE_VALUE("SETS_OFFSET", FetchDomInt));
+        exer.reps += (DETERMINE_VALUE("REPS_OFFSET", FetchDomInt));
+        exer.hold += (DETERMINE_VALUE("HOLD_OFFSET", FetchDomInt));
+        exer.ahold += (DETERMINE_VALUE("AHOLD_OFFSET", FetchDomInt));
     }
 }
 
 EXTENSION init () {
-    cout << (DETERMINE_VALUE("DISPLAY", FetchValueInt)) << endl;
+    cout << (DETERMINE_VALUE("DISPLAY", FetchDomInt)) << endl;
 }
 
 /* POST START SCREEN EXTENSIONS */
@@ -89,7 +89,7 @@ EXTENSION calculate_total_session_time () {
     for (auto& exer : Exercises) {
         total_time += exer.CalculateTime();
     }
-    total_time *= DETERMINE_VALUE("ROUNDS", FetchValueInt);
+    total_time *= DETERMINE_VALUE("ROUNDS", FetchDomInt);
     cout << std::fixed;
     cout << std::setprecision(2);
     cout << "T: " << total_time << " minutes" << endl;
@@ -103,7 +103,7 @@ EXTENSION calculate_total_session_reps () {
     for (auto& exer : Exercises) {
         total_reps += exer.reps * exer.sets;
     }
-    total_reps *= (DETERMINE_VALUE("ROUNDS", FetchValueInt));
+    total_reps *= (DETERMINE_VALUE("ROUNDS", FetchDomInt));
     cout << "R: " << total_reps <<  endl;
     RESET_COLORS();
 }
@@ -138,7 +138,7 @@ EXTENSION display_info () {
 
 EXTENSION display_exercise_image () {
     // This extension displays a visual representation of the current exercise at hand
-    if ((DETERMINE_VALUE("DISPLAY", FetchValueInt)) and current_exercise->tags.find("NO_DISPLAY") == std::string::npos) {
+    if ((DETERMINE_VALUE("DISPLAY", FetchDomInt)) and current_exercise->tags.find("NO_DISPLAY") == std::string::npos) {
         string png (current_exercise->name);
         png.append(".png");
         string cmd = "start " + string(FILE_PNGS_PATH) + string(png) + " && timeout 4 && taskkill /IM Microsoft.Photos.exe /F";
@@ -163,8 +163,8 @@ EXTENSION on_focus () {
 /* POST ROUND */
 
 EXTENSION handle_decrease () {
-    int rounds = (DETERMINE_VALUE("ROUNDS", FetchValueInt));
-    int decrease = (DETERMINE_VALUE("DECREASE", FetchValueInt));
+    int rounds = (DETERMINE_VALUE("ROUNDS", FetchDomInt));
+    int decrease = (DETERMINE_VALUE("DECREASE", FetchDomInt));
 
     if (rounds > 1 and decrease) {
         for (auto& exer : Exercises) {
@@ -175,15 +175,15 @@ EXTENSION handle_decrease () {
 
 
 EXTENSION handle_trim () {
-    if ((DETERMINE_VALUE("TRIM", FetchValueInt))) {
-        Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("TRIM", FetchValueInt)));
+    if ((DETERMINE_VALUE("TRIM", FetchDomInt))) {
+        Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("TRIM", FetchDomInt)));
     }
 }
 
 // EXTENSION multi_round_session () {
-//     if ((DETERMINE_VALUE("ROUNDS", FetchValueInt)) > 1 and current_exercise->tags.find("NO_NEG") == std::string::npos) {
+//     if ((DETERMINE_VALUE("ROUNDS", FetchDomInt)) > 1 and current_exercise->tags.find("NO_NEG") == std::string::npos) {
 //         for (auto& exer : Exercises) {
-//             exer.reps -= (DETERMINE_VALUE("NEG", FetchValueInt));
+//             exer.reps -= (DETERMINE_VALUE("NEG", FetchDomInt));
 //         }
 //         std::reverse(Exercises.begin(), Exercises.end());
 //     }

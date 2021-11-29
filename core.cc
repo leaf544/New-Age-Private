@@ -40,11 +40,17 @@ int run_iteration = 1;
 vector<Exercise> Exercises;
 Exercise* current_exercise = NULL;
 Category living_category;
-map<string, string> Variables;
+map<string, vector<string>> Variables;
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-string FetchValue (string);
-int FetchValueInt (string);
+// string FetchValue (string);
+// int FetchValueInt (string);
+
+string FetchDomRaw (string);
+string FetchValueRaw (string, int);
+int FetchDomInt (string);
+int FetchValueInt (string, int);
+
 void bar (const char*, int, int, int);
 void ClearScreen ();
 
@@ -111,8 +117,24 @@ int main (void) {
     while (true) {
         values = UTIL::split_string(current_line.substr(1, current_line.length()), " ");
         switch (current_line[0]) {
-        case VARIABLE_MARKER: 
-            Variables[values[1]] = values[2];
+        case VARIABLE_MARKER:
+
+            if (values.size() > 3) {
+                int n = (values.size() - 3) + 1;
+                int p = 2;
+                FLOOP (int, k, n) {
+                    cout << values[p] << endl;
+                    Variables[values[1]][k] = values[p];
+                    p++;
+                }
+                // Variables[values[1]][0] = values[2];
+                // Variables[values[1]][1] = values[3];
+                // Variables[values[1]][2] = values[4];
+            } else {
+                Variables[values[1]] = values[2];
+            }
+            
+            // Variables[values[1]] = values[2];
             break;
         case CATEGORY_MARKER:
             variables_compiled = true;
@@ -150,11 +172,11 @@ int main (void) {
             break;
         }
         if (variables_compiled) {
-            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchValueInt));
+            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchDomInt));
             DEFAULT_FREESTYLE = FetchValue("DEFAULT_FREESTYLE")[0];
-            DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchValueInt));
-            DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchValueInt));
-            DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchValueInt));
+            DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchDomInt));
+            DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchDomInt));
+            DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchDomInt));
         }
         
         values.clear();
@@ -196,10 +218,10 @@ int main (void) {
     
     bool finished = false;
 
-    bool eye_of_elohim = (DETERMINE_VALUE("EYE_OF_GOD", FetchValueInt));
+    bool eye_of_elohim = (DETERMINE_VALUE("EYE_OF_GOD", FetchDomInt));
     
     FLOOP (int, RUN, run_iteration) {
-        FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchValueInt))) {
+        FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchDomInt))) {
 
             if (eye_of_elohim) {
                 FOREGROUND_COLOR(2);
@@ -235,8 +257,8 @@ int main (void) {
                     bool skipped = false;
                     int  current_reps = 0;
                     // (DETERMINE_VALUE("DISPLAY", FetchValueInt))
-                    bool on = !((DETERMINE_VALUE("DISPLAY", FetchValueInt)) || current_exercise->tags.find("DISPLAY") != string::npos);
-                    int wait = ((DETERMINE_VALUE("RDELAY", FetchValueInt)) * MS) * on;
+                    bool on = !((DETERMINE_VALUE("DISPLAY", FetchDomInt)) || current_exercise->tags.find("DISPLAY") != string::npos);
+                    int wait = ((DETERMINE_VALUE("RDELAY", FetchDomInt)) * MS) * on;
                     Sleep(wait);
                     if (current_exercise->freestyle == 'T') UTIL::espeak("Begin");
                     /* End Sets Block */
@@ -250,7 +272,7 @@ int main (void) {
 
                             // shame on you
                             
-                            if ((DETERMINE_VALUE("FLARE", FetchValueInt))) {
+                            if ((DETERMINE_VALUE("FLARE", FetchDomInt))) {
                                 system("color 1a");
                                 Sleep(75);
                                 system("color 7");
@@ -335,12 +357,29 @@ int main (void) {
     return 0;
 }
 
-string FetchValue (string iden) {
-    return Variables[iden] != "" ? Variables[iden] : "0";
+// string FetchValue (string iden) {
+//     return Variables[iden] != "" ? Variables[iden] : "0";
+// }
+
+// int FetchValueInt (string iden) {
+//     return atoi(FetchValue(iden).c_str());
+// }
+
+
+string FetchDomRaw (string iden) {
+    return Variables[iden][0] != "" ? Variables[iden][0] : "0";
 }
 
-int FetchValueInt (string iden) {
-    return atoi(FetchValue(iden).c_str());
+int FetchDomInt (string iden) {
+    return atoi(FetchDomRaw(iden).c_str());
+}
+
+string FetchValueRaw (string iden, int at) {
+    return Variables[iden][at] != "" ? Variables[iden][at] : "0";
+}
+
+int FetchValueInt (string iden, int at) {
+    return atoi(FetchValueRaw(iden, at).c_str());
 }
 
 void bar(const char* label, int a, int b, int c) {
