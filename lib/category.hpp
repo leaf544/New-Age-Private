@@ -19,23 +19,44 @@
 
 using std::cout;
 using std::endl;
+using std::string;
+using std::vector;
+using std::map;
 
 class Category {
 public:
-    std::map<std::string, std::string> Variables;
+    map<string, vector<string>> Variables;
     bool hasVariables = false;
     
-    std::string FetchValue (std::string iden) {
-        return this->Variables[iden] != "" ? this->Variables[iden] : "0";
-    }
-    
-    int FetchValueInt (std::string iden) {
-        return atoi(FetchValue(iden).c_str());
+    string FetchDomRaw (string iden) {
+        return this->Variables[iden].size() ? this->Variables[iden][0] : "0";
     }
 
+    int FetchDomInt (string iden) {
+        return atoi(FetchDomRaw(iden).c_str());
+    }
+
+    string FetchValueRaw (string iden, int at) {
+        return this->Variables[iden][at] != "" ? this->Variables[iden][at] : "0";
+    }
+
+    int FetchValueInt (string iden, int at) {
+        return atoi(FetchValueRaw(iden, at).c_str());
+    }
+    
+    // std::string FetchValue (std::string iden) {
+    //     return this->Variables[iden] != "" ? this->Variables[iden] : "0";
+    // }
+    
+    // int FetchValueInt (std::string iden) {
+    //     return atoi(FetchValue(iden).c_str());
+    // }
+    
     void ListVariables () {
         for (auto it = this->Variables.begin(); it != this->Variables.end(); it++) {
-            cout << "IDEN: " << it->first << " / " << "VALUE: " << it->second << endl;
+            if (it->first != "" && it->second.size()) {
+                cout << "IDEN: " << it->first << " / " << it->second[0] << endl;
+            }
         }
     }
     

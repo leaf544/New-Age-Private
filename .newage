@@ -1,30 +1,31 @@
 #CHAR CATEGORY      DOM
 
-#BOOL EYE_OF_GOD     0
-#BOOL FLARE          0
+%DOM #INT START 0 #INT ROUNDS 1 #INT RDELAY 2 #BOOL DISPLAY 1
 
-#INT REPS_OFFSET     5 2
-
-%DOM #INT START 0 #INT ROUNDS 1 #INT RDELAY 2
-
-// $Dead_Bug_Exercise                       1 F 15 20 3
-// "Lower abdomen, Hip flexors"
-// $Glute_Bridge_Exercise                   1 F 15 20 3
-// "Glutes, Hamstrings, Hip flexors, Erector spinae"
-// $Cobra_Stretch_Exercise                  1 F 15 20 3
-// "Erector spinae, Glutes, Core"
-// $Butterfly_Exercise                      1 T 12 20 3
-// "Hip flexors"
-// $Single_Leg_Deadlift_Exercise            1 F 15 20 3
-// "Hamstrings, Erector spinae"
-// $Sitting_Hamstring_Stretch_Exercise      1 F 20 20 4
-// "Hamstrings"
-
-%STRETCHES
-
-$Sitting_Hamstring_Stretch_Exercise      1 F 20 20 4 F
-"Hamstrings"
-$Butterfly_Exercise                      1 T 20 20 3
+$Dead_Bug_Exercise                       1 F 15 20 3
+"Lower abdomen, Hip flexors"
+$Glute_Bridge_Exercise                   1 F 15 20 3
+"Glutes, Hamstrings, Hip flexors, Erector spinae"
+$Cobra_Stretch_Exercise                  1 F 15 20 3
+"Erector spinae, Glutes, Core"
+$Butterfly_Exercise                      1 T 12 20 3
 "Hip flexors"
-$Table_Hold_Exercise                     1 T 15 20 3 DISPLAY
-"Gastrocnemius"
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+$Sitting_Hamstring_Stretch_Exercise       1 F 10 20 4
+"Hamstrings"
+
+%META #INT ROUNDS 1 #INT RDELAY 2
+
+@$Dead_Bug_Exercise                       1 F 15 20 3
+"Lower abdomen, Hip flexors"
+$Cobra_Stretch_Exercise                  1 F 15 20 3
+"Erector spinae, Glutes, Core"
+$Laying_Hamstring_Stretch_Exercise       1 F 15 20 4
+"Hamstrings"
+$Butterfly_Exercise                      1 T 15 20 3
+"Hip flexors"
+
+%HAM #INT ROUNDS 1 #INT RDELAY 2
+
+$Laying_Hamstring_Stretch_Exercise      1 F 12 20 4 

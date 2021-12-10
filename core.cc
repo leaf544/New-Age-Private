@@ -1,4 +1,4 @@
- /* Written by leaf544 aka grandma */
+/* Written by leaf544 aka grandma */
 
 /* STD */
 #include <iostream>
@@ -41,10 +41,9 @@ vector<Exercise> Exercises;
 Exercise* current_exercise = NULL;
 Category living_category;
 map<string, vector<string>> Variables;
+map<string, vector<string>> Register;
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
-// string FetchValue (string);
-// int FetchValueInt (string);
+void compile_newage(vector<string>*, bool);
 
 string FetchDomRaw (string);
 string FetchValueRaw (string, int);
@@ -95,112 +94,34 @@ int main (void) {
     
     /* COMPILE EXERCISES AND VARIABLES */
     
-    std::ifstream file(file_path);
-    string category = "";
+    std::ifstream file(file_path);    
     vector<string> values;
     
     /* PRE COMPILATION  */ 
     
-    bool variables_compiled = false;
     vector<string> lines;    
     
     for (string line; std::getline(file, line);) {
         if (!line.size()) continue;
         lines.push_back(line);
-    }    
-
-    Reader<string> lines_reader;
-    lines_reader.attatch(&lines);
-    lines_reader.set(0);
-    string current_line = *(lines_reader.at(lines_reader.i));
-
-    while (true) {
-        values = UTIL::split_string(current_line.substr(1, current_line.length()), " ");
-        switch (current_line[0]) {
-        case VARIABLE_MARKER:
-
-            if (values.size() > 3) {
-                int n = (values.size() - 3) + 1;
-                int p = 2;
-                FLOOP (int, k, n) {
-                    cout << values[p] << endl;
-                    Variables[values[1]][k] = values[p];
-                    p++;
-                }
-                // Variables[values[1]][0] = values[2];
-                // Variables[values[1]][1] = values[3];
-                // Variables[values[1]][2] = values[4];
-            } else {
-                Variables[values[1]] = values[2];
-            }
-            
-            // Variables[values[1]] = values[2];
-            break;
-        case CATEGORY_MARKER:
-            variables_compiled = true;
-            category = values[0];
-            
-            if (category == FetchValue("CATEGORY") and values.size() > 1) {
-                living_category.hasVariables = true;
-                values.erase(values.begin());
-                int p = 1;
-                FLOOP (int, n, values.size() / 3) { living_category.Variables[values[p]] = values[p+1]; p+=3; }
-            }
-            break;
-        case EXERCISE_MARKER:
-            if (category == FetchValue("CATEGORY")) {
-                Exercises.push_back(Exercise(
-                                             values[0],
-                                             (values.size() > 2) == false ? DEFAULT_FREESTYLE : values[2][0],
-                                             (values.size() > 1) == false ? DEFAULT_SETS : CATOI(values[1]), 
-                                             (values.size() > 3) == false ? DEFAULT_REPS : CATOI(values[3]), 
-                                             (values.size() > 4) == false ? DEFAULT_HOLD : CATOI(values[4]), 
-                                             (values.size() > 5) == false ? DEFAULT_AHOLD : CATOI(values[5]),
-                                             Exercises.size()
-                                             )
-                                    );
-
-                if (values.size() > 6) {
-                    FLOOPS (int, i, 6, values.size()) {
-                        Exercises.back().tags.append(values[i] + " ");
-                    }
-                }
-            }
-            break;
-        case DESCRIPTION_MARKER:
-            if (Exercises.size() and category == FetchValue("CATEGORY")) Exercises.back().description = current_line.substr(1, current_line.length() - 2);
-            break;
-        }
-        if (variables_compiled) {
-            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchDomInt));
-            DEFAULT_FREESTYLE = FetchValue("DEFAULT_FREESTYLE")[0];
-            DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchDomInt));
-            DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchDomInt));
-            DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchDomInt));
-        }
-        
-        values.clear();
-        
-        if (lines_reader.i == lines_reader.limit - 1) {break;} else {
-            lines_reader.progress();
-            current_line = *(lines_reader.at(lines_reader.i));
-        }
     }
-   
+
+    compile_newage(&lines, false);
+    
     if (!Exercises.size()) {
         Log("No exercises were registered", 8);
         ON_KEY_CLS();
         return 0;
     }
-    
+
     /* POST COMPILATION */
         
     compile_extensions("post_compilation");
-    
+
     /* START SCREEN */
     
-    FOREGROUND_COLOR(FetchValue("CATEGORY").length() + abs((int)FetchValue("CATEGORY")[0] - (int)FetchValue("CATEGORY")[1]));
-    cout << FetchValue("CATEGORY") << endl;
+    FOREGROUND_COLOR(FetchDomRaw("CATEGORY").length() + abs((int)FetchDomRaw("CATEGORY")[0] - (int)FetchDomRaw("CATEGORY")[1]));
+    cout << FetchDomRaw("CATEGORY") << endl;
     
     RESET_COLORS();
     compile_extensions("post_start_screen");
@@ -222,7 +143,6 @@ int main (void) {
     
     FLOOP (int, RUN, run_iteration) {
         FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchDomInt))) {
-
             if (eye_of_elohim) {
                 FOREGROUND_COLOR(2);
                 cout << "INITIAL ROUND BEGIN: " << endl;
@@ -238,14 +158,14 @@ int main (void) {
             current_exercise = exercise_reader.at(0);
             exercise_reader.attatch(&Exercises);
         
-            if (ROUNDS > 0 && !eye_of_elohim) {
+            if (ROUNDS > 0 && !eye_of_elohim || RUN && !eye_of_elohim) {
                 current_exercise->Describe2();
                 ON_KEY_CLS();
             }
-            
+           
             // RB
             
-            while (not finished && !eye_of_elohim) {
+            while (!finished && !eye_of_elohim) {
                 /* Begin Exercise Block */
                 UTIL::espeak(current_exercise->name);
                 compile_extensions("post_exercise");
@@ -256,9 +176,9 @@ int main (void) {
                     bool alternate = false;
                     bool skipped = false;
                     int  current_reps = 0;
-                    // (DETERMINE_VALUE("DISPLAY", FetchValueInt))
-                    bool on = !((DETERMINE_VALUE("DISPLAY", FetchDomInt)) || current_exercise->tags.find("DISPLAY") != string::npos);
-                    int wait = ((DETERMINE_VALUE("RDELAY", FetchDomInt)) * MS) * on;
+                    // (DETERMINE_VALUE("DISPLAY", FetchDomRawInt))
+                    #define on !((DETERMINE_VALUE("DISPLAY", FetchDomInt)) || current_exercise->tags.find("DISPLAY") != string::npos)
+                    #define wait ((DETERMINE_VALUE("RDELAY", FetchDomInt)) * MS) * on
                     Sleep(wait);
                     if (current_exercise->freestyle == 'T') UTIL::espeak("Begin");
                     /* End Sets Block */
@@ -319,6 +239,8 @@ int main (void) {
                 CLEAR();
                 UTIL::espeak(string(current_exercise->name).append(" Finished"));
                 UTIL::espeak("Take a break");
+
+                // this is prob the problem
                 
                 if (exercise_reader.i == exercise_reader.limit - 1) {
                     finished = true;
@@ -345,10 +267,14 @@ int main (void) {
                 }
                 ON_KEY_CLS();
             }
-            
+        }
+        if (!RUN) {
+            compile_extensions("run_end");
+            compile_newage(&lines, true);
+            compile_extensions("run_end"); // again for reverse exercises support
         }
     }
-
+    
     
     UTIL::espeak("Session finished");
     UTIL::espeak("Excellent job");
@@ -357,17 +283,8 @@ int main (void) {
     return 0;
 }
 
-// string FetchValue (string iden) {
-//     return Variables[iden] != "" ? Variables[iden] : "0";
-// }
-
-// int FetchValueInt (string iden) {
-//     return atoi(FetchValue(iden).c_str());
-// }
-
-
 string FetchDomRaw (string iden) {
-    return Variables[iden][0] != "" ? Variables[iden][0] : "0";
+    return Variables[iden].size() ? Variables[iden][0] : "0";
 }
 
 int FetchDomInt (string iden) {
@@ -375,7 +292,7 @@ int FetchDomInt (string iden) {
 }
 
 string FetchValueRaw (string iden, int at) {
-    return Variables[iden][at] != "" ? Variables[iden][at] : "0";
+    return Variables[iden].size() ? Variables[iden][at] : "0";
 }
 
 int FetchValueInt (string iden, int at) {
@@ -402,4 +319,102 @@ void ClearScreen () {
     cursorPosition.X = 0;
     cursorPosition.Y = 0;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}
+
+void compile_newage (vector<string>* dump, bool ignore) {
+
+    // living_category.Variables.clear();
+    // living_category.hasVariables = false;
+    // Variables.clear(); // just in case? i'm not aware of the possible ramifications this could cause if this line wasn't here
+
+    Exercises.clear();
+    
+    vector<string> values;
+    bool variables_compiled = false;
+    string category = "";
+    
+    Reader<string> lines_reader;
+    lines_reader.attatch(dump);
+    lines_reader.set(0);
+    string current_line = *(lines_reader.at(lines_reader.i));
+
+    lines_reader.std_loop(true, [&](){
+        current_line = *(lines_reader.at(lines_reader.i));
+        values = UTIL::split_string(current_line.substr(1, current_line.length()), " ");
+        switch (current_line[0]) {
+        case VARIABLE_MARKER:
+            
+            if (!ignore) {
+                if (values.size() > 3) {
+                    FLOOPS (int, i, 2, values.size()) {
+                        //cout << values[i] << endl;
+                        Variables[values[1]].push_back(values[i]);
+                    }
+                } else {
+                    Variables[values[1]].push_back(values[2]);
+                }
+            }
+            
+            // Variables[values[1]] = values[2];
+            break;
+        case CATEGORY_MARKER:
+            variables_compiled = true;
+            category = values[0];
+            
+            if (category == FetchDomRaw("CATEGORY") and values.size() > 1) {
+                //cout << "category: " << category << endl;
+                //cin.get();
+                living_category.hasVariables = true;
+                values.erase(values.begin());
+                int p = 1;
+                FLOOP (int, n, values.size() / 3) {
+                    living_category.Variables[values[p]].push_back(values[p+1]); p+=3;
+                }
+                RESET_COLORS();
+            }
+            
+            break;
+        case EXERCISE_MARKER:
+            if (category == FetchDomRaw("CATEGORY")) {
+                Exercises.push_back(Exercise(
+                                             values[0],
+                                             (values.size() > 2) == false ? DEFAULT_FREESTYLE : values[2][0],
+                                             (values.size() > 1) == false ? DEFAULT_SETS : CATOI(values[1]), 
+                                             (values.size() > 3) == false ? DEFAULT_REPS : CATOI(values[3]), 
+                                             (values.size() > 4) == false ? DEFAULT_HOLD : CATOI(values[4]), 
+                                             (values.size() > 5) == false ? DEFAULT_AHOLD : CATOI(values[5]),
+                                             Exercises.size()
+                                             )
+                                    );
+
+                if (values.size() > 6) {
+                    FLOOPS (int, i, 6, values.size()) {
+                        Exercises.back().tags.append(values[i] + " ");
+                    }
+                }
+            }
+            break;
+        case DESCRIPTION_MARKER:
+            if (Exercises.size() and category == FetchDomRaw("CATEGORY")) Exercises.back().description = current_line.substr(1, current_line.length() - 2);
+            break;
+        }
+
+        if (variables_compiled) {
+            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchDomInt)); 
+            DEFAULT_FREESTYLE = FetchDomRaw("DEFAULT_FREESTYLE")[0];
+            DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchDomInt));
+            DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchDomInt));
+            DEFAULT_AHOLD = (DETERMINE_VALUE("DEFAULT_AHOLD", FetchDomInt));
+        }
+        
+        values.clear();
+    });
+    
+    // while (true) {
+                
+    //     if (lines_reader.i == lines_reader.limit - 1) {break;} else {
+    //         lines_reader.progress();
+    //         current_line = *(lines_reader.at(lines_reader.i));
+    //     }
+    // }
 }

@@ -38,19 +38,23 @@ using std::map;
 #define PUSH_EXTENSION(seg, func) std::pair<std::string, void(*)(void)>(seg, func)
 #define EXTENSION void
 
+extern int run_iteration;
 extern vector<Exercise> Exercises;
 extern Exercise* current_exercise;
-extern map<std::string, std::string> Variables;
+extern map<string, vector<string>> Variables;
+extern map<string, vector<string>> Register;
 extern Category living_category;
 extern HANDLE hConsole;
 
 extern string FetchDomRaw (string);
+extern string FetchValueRaw (string, int);
 extern int FetchDomInt (string);
+extern int FetchValueInt (string, int);
 
 /* POST COMPILATION EXTENSIONS */
 
 EXTENSION reverse_exercises () {
-    if (DETERMINE_VALUE("REVERSE", FetchDomInt)) {
+    if ((DETERMINE_VALUE("REVERSE", FetchDomInt))) {
         std::reverse(Exercises.begin(), Exercises.end());
     }
 }
@@ -60,19 +64,67 @@ EXTENSION handle_start () {
 }
 
 EXTENSION on_mood () {
-    if (DETERMINE_VALUE("LOW_MOOD", FetchDomInt)) {
+    if ((DETERMINE_VALUE("LOW_MOOD", FetchDomInt))) {
         for (auto& exer : Exercises) {
             exer.reps = 12;
         }
     }
 }
 
+// verbose as fuck
+
 EXTENSION handle_offsets () {
-    for (auto& exer : Exercises) {
-        exer.sets += (DETERMINE_VALUE("SETS_OFFSET", FetchDomInt));
-        exer.reps += (DETERMINE_VALUE("REPS_OFFSET", FetchDomInt));
-        exer.hold += (DETERMINE_VALUE("HOLD_OFFSET", FetchDomInt));
-        exer.ahold += (DETERMINE_VALUE("AHOLD_OFFSET", FetchDomInt));
+    string fronts[] = {"SETS", "REPS", "HOLD", "AHOLD"};
+    #define _size sizeof(fronts) / sizeof(fronts[0])
+
+    FLOOP (int, i, _size) {
+        //string current = fronts[i];
+        string modified = fronts[i] + "_OFFSET";
+        #define _begin FetchValueInt(modified, 1)
+        FLOOPS (int, j, _begin, Exercises.size()) {
+            auto& exer = Exercises[j];
+            #define _mode FetchValueRaw(modified, 2)[0]
+            switch (modified[0]) {
+            case 'S':
+                if (_mode == '+') {
+                    exer.sets += FetchDomInt(modified);
+                } else {
+                    exer.sets -= FetchDomInt(modified);
+                }
+                break;
+            case 'R':
+                if (_mode == '+') {
+                    exer.reps += FetchDomInt(modified);
+                } else {
+                    exer.reps -= FetchDomInt(modified);
+                }
+                break;
+            case 'H':
+                if (_mode == '+') {
+                    exer.hold += FetchDomInt(modified);
+                } else {
+                    exer.hold -= FetchDomInt(modified);
+                }
+                break;
+            case 'A':
+                if (_mode == '+') {
+                    exer.ahold += FetchDomInt(modified);
+                } else {
+                    exer.ahold -= FetchDomInt(modified);
+                }
+                break;
+            }
+        }
+    }
+}
+
+EXTENSION multi_category_init () {
+    run_iteration += (Variables["CATEGORY"].size()) - 1;
+}
+
+EXTENSION list_cat_variables () {
+    if ((DETERMINE_VALUE("LIST", FetchDomInt))) {
+        living_category.ListVariables();
     }
 }
 
@@ -121,14 +173,35 @@ EXTENSION display_variables () {
         cout << endl;
         for (auto it = living_category.Variables.begin(); it != living_category.Variables.end(); it++) {
             FOREGROUND_COLOR(colors);
-            if (it->second != "") {
-                cout << it->first << ": " << it->second << endl;    
+            if (it->first != "" && it->second.size()) {
+                cout << it->first << ": " << it->second[0] << endl;    
             }
             colors++;
         }
         RESET_COLORS(); // Just in case, evaluate later
     }
 }
+
+// EXTENSION display_variables () {
+//     int colors = 0;
+//     RESET_COLORS(); // Just in case, evaluate later
+//     if (living_category.Variables.size()) {
+//         cout << endl;
+//         for (auto it = living_category.Variables.begin(); it != living_category.Variables.end(); it++) {
+//             //cout << it->second[0] << endl;
+//             // if (!it->second.size()) {
+//             //     cout << "empty?" << endl;
+//             // }
+//             FOREGROUND_COLOR(colors);
+//             // FOREGROUND_COLOR(colors);
+//             // if (it->second.front() != "") {
+//             //     cout << it->first << ": " << it->second.front() << endl;    
+//             // }
+//             colors++;
+//         }
+//         RESET_COLORS(); // Just in case, evaluate later
+//     }
+// }
 
 EXTENSION display_info () {
     Log("Hello from display_info", 6);
@@ -189,12 +262,31 @@ EXTENSION handle_trim () {
 //     }
 // }
 
+/* RUN END */
+
+EXTENSION multi_category () {
+    if (Variables["CATEGORY"].size() > 1) {
+        Variables["CATEGORY"][0] = Variables["CATEGORY"][1];
+        Variables["CATEGORY"].erase(Variables["CATEGORY"].begin() + 1);
+    }
+}
+
+
+EXTENSION reverse_exercises_2 () {
+    if ((DETERMINE_VALUE("REVERSE", FetchDomInt))) {
+        std::reverse(Exercises.begin(), Exercises.end());
+    }
+}
+
+
 vector<std::pair<string, void(*)(void)>> Extensions = {
     //// POST COMPILATION ////
     PUSH_EXTENSION("post_compilation", &reverse_exercises),
     PUSH_EXTENSION("post_compilation", &handle_start),
     PUSH_EXTENSION("post_compilation", &on_mood),
     PUSH_EXTENSION("post_compilation", &handle_offsets),
+    PUSH_EXTENSION("post_compilation", &multi_category_init),
+    //PUSH_EXTENSION("post_compilation", &list_cat_variables),
     //PUSH_EXTENSION("post_compilation", &init),
     //// POST START SCREEN ////
     PUSH_EXTENSION("post_start_screen", &calculate_total_session_time),
@@ -206,7 +298,9 @@ vector<std::pair<string, void(*)(void)>> Extensions = {
     PUSH_EXTENSION("post_exercise", &on_focus),
     //// POST ROUND END ////
     PUSH_EXTENSION("round_end", &handle_decrease),
-    PUSH_EXTENSION("round_end", &handle_trim)   
+    PUSH_EXTENSION("round_end", &handle_trim),
+    PUSH_EXTENSION("run_end", &multi_category),
+    PUSH_EXTENSION("run_end", &reverse_exercises_2)
 };
 
 void compile_extensions (string group) {

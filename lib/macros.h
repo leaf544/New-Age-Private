@@ -34,7 +34,8 @@
 #define FOREGROUND_COLOR(c) SetConsoleTextAttribute(hConsole, c);
 #define BACKGROUND_COLOR(c) SetConsoleTextAttribute(hConsole, c);
 #define RESET_COLORS() FOREGROUND_COLOR(DEFAULT_FOREGROUND);
-#define DETERMINE_VALUE(val, f) living_category.hasVariables ? living_category.f(val) == 0 ? f(val) : living_category.f(val): f(val)
+//#define DETERMINE_VALUE(val, f) living_category.hasVariables ? living_category.f(val) == 0 ? f(val) : living_category.f(val): f(val)
+#define DETERMINE_VALUE(val, f) living_category.hasVariables ? !living_category.f(val) ? f(val) : living_category.f(val) : f(val)
 #define CATOI(o) atoi(o.c_str())
 #define EXTENSION void
 
