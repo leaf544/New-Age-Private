@@ -50,7 +50,7 @@ string FetchValueRaw (string, int);
 int FetchDomInt (string);
 int FetchValueInt (string, int);
 
-void bar (const char*, int, int, int, bool bar=false);
+void bar (const char*, int, int, int);
 void ClearScreen ();
 
 /* DEFAULTS */
@@ -63,6 +63,7 @@ int DEFAULT_AHOLD = 0;
 
 int main (void) {
     
+
     /* SETUP & PREREQUISITES */
     
     system("title NewAge");
@@ -96,7 +97,7 @@ int main (void) {
     
     std::ifstream file(file_path);    
     vector<string> values;
-
+    
     /* PRE COMPILATION  */ 
     
     vector<string> lines;    
@@ -140,7 +141,7 @@ int main (void) {
     bool finished = false;
 
     bool eye_of_elohim = (DETERMINE_VALUE("EYE_OF_GOD", FetchDomInt));
-
+    
     FLOOP (int, RUN, run_iteration) {
         FLOOP (int, ROUNDS, (DETERMINE_VALUE("ROUNDS", FetchDomInt))) {
             if (eye_of_elohim) {
@@ -179,17 +180,17 @@ int main (void) {
                     // (DETERMINE_VALUE("DISPLAY", FetchDomRawInt))
                     #define on !((DETERMINE_VALUE("DISPLAY", FetchDomInt)) || current_exercise->tags.find("DISPLAY") != string::npos)
                     #define wait ((DETERMINE_VALUE("RDELAY", FetchDomInt)) * MS) * on
-                    #define barv (DETERMINE_VALUE("BAR", FetchDomInt))
                     Sleep(wait);
                     if (current_exercise->freestyle == 'T') UTIL::espeak("Begin");
                     /* End Sets Block */
                     FLOOP (int, REPS, (current_exercise->reps * 2) * (!eye_of_elohim)) {
                         if (not alternate) {
                             ClearScreen();
-                            bar("REPS: ", current_reps, current_exercise->reps, 11, barv);
-                            bar("HOLD: ", 0, current_exercise->hold, 5, barv);
+                            bar("REPS: ", current_reps, current_exercise->reps, 11);
+                            bar("HOLD: ", 0, current_exercise->hold, 5);
                             current_reps++;
                             UTIL::espeak(std::to_string(current_reps), current_exercise->freestyle);
+
                             // shame on you
                             
                             if ((DETERMINE_VALUE("FLARE", FetchDomInt))) {
@@ -204,20 +205,17 @@ int main (void) {
                                     break;
                                 }
                                 if (elapsed != last) {
-                                    info.dwSize = 100;
-                                    info.bVisible = false;
-                                    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
                                     ClearScreen();
-                                    bar("REPS: ", current_reps-1, current_exercise->reps, 11, barv);
-                                    bar("HOLD: ", elapsed, current_exercise->hold, 5, barv);
+                                    bar("REPS: ", current_reps-1, current_exercise->reps, 11);
+                                    bar("HOLD: ", elapsed, current_exercise->hold, 5);
                                 });
                             
                             if (skipped) break;
                         } else {
-                            ClearScreen();
-                            //CLEAR();
-                            bar("REPS: ", current_reps, current_exercise->reps, 11, barv);
-                            bar("AHOLD: ", 0, current_exercise->ahold, 5, barv);
+                            //ClearScreen();
+                            CLEAR();
+                            bar("REPS: ", current_reps, current_exercise->reps, 11);
+                            bar("AHOLD: ", 0, current_exercise->ahold, 5);
                             UTIL::espeak("Alternate", current_exercise->freestyle);
                             SLEEP_TIME_FUNCTION(current_exercise->ahold, if (GetAsyncKeyState(0x39)){
                                     Log("Skipping..", 4);
@@ -226,12 +224,9 @@ int main (void) {
                                 }
 
                                 if (elapsed != last) {
-                                    info.dwSize = 100;
-                                    info.bVisible = false;
-                                    SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
                                     ClearScreen();
-                                    bar("REPS: ", current_reps, current_exercise->reps, 11, barv);
-                                    bar("AHOLD: ", elapsed, current_exercise->ahold, 5, barv);
+                                    bar("REPS: ", current_reps, current_exercise->reps, 11);
+                                    bar("AHOLD: ", elapsed, current_exercise->ahold, 5);
                                 }
                                 );
                         
@@ -305,7 +300,7 @@ int FetchValueInt (string iden, int at) {
     return atoi(FetchValueRaw(iden, at).c_str());
 }
 
-void bar(const char* label, int a, int b, int c, bool bar) {
+void bar(const char* label, int a, int b, int c) {
     FOREGROUND_COLOR(c);
     //CLEAR();
     string sbar(b, ' ');
@@ -314,15 +309,10 @@ void bar(const char* label, int a, int b, int c, bool bar) {
     }
     string a_c = std::to_string(a);
     string b_c = std::to_string(b);
-    if (bar) {
-        sbar.append(" " + a_c + "/" + b_c);
-        cout << label << sbar << endl;
-    } else {
-        cout << a << "/" << b << endl;
-    }
+    sbar.append(" " + a_c + "/" + b_c);
+    cout << label << sbar << endl;
     RESET_COLORS();
 }
-
 
 
 void ClearScreen () {	
@@ -411,7 +401,7 @@ void compile_newage (vector<string>* dump, bool ignore) {
         }
 
         if (variables_compiled) {
-            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchDomInt));
+            DEFAULT_SETS = (DETERMINE_VALUE("DEFAULT_SETS", FetchDomInt)); 
             DEFAULT_FREESTYLE = FetchDomRaw("DEFAULT_FREESTYLE")[0];
             DEFAULT_REPS = (DETERMINE_VALUE("DEFAULT_REPS", FetchDomInt));
             DEFAULT_HOLD = (DETERMINE_VALUE("DEFAULT_HOLD", FetchDomInt));

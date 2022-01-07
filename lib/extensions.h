@@ -60,7 +60,13 @@ EXTENSION reverse_exercises () {
 }
 
 EXTENSION handle_start () {
-    Exercises.erase(Exercises.begin(), Exercises.begin() + (DETERMINE_VALUE("START", FetchDomInt)));
+    int remove = 0;
+    FLOOP (int, i , Exercises.size()) {
+        if (Exercises[i].tags.find('-') != string::npos) {
+            remove = i; break;
+        }
+    }
+    Exercises.erase(Exercises.begin(), Exercises.begin() + ((DETERMINE_VALUE("START", FetchDomInt)) + remove));
 }
 
 EXTENSION on_mood () {
@@ -75,15 +81,15 @@ EXTENSION on_mood () {
 
 EXTENSION handle_offsets () {
     string fronts[] = {"SETS", "REPS", "HOLD", "AHOLD"};
-    #define _size sizeof(fronts) / sizeof(fronts[0])
+    auto _size = sizeof(fronts) / sizeof(fronts[0]);
 
     FLOOP (int, i, _size) {
         //string current = fronts[i];
         string modified = fronts[i] + "_OFFSET";
-        #define _begin FetchValueInt(modified, 1)
+        auto _begin = FetchValueInt(modified, 1);
         FLOOPS (int, j, _begin, Exercises.size()) {
             auto& exer = Exercises[j];
-            #define _mode FetchValueRaw(modified, 2)[0]
+            auto _mode =  FetchValueRaw(modified, 2)[0];
             switch (modified[0]) {
             case 'S':
                 if (_mode == '+') {

@@ -1,6 +1,7 @@
-#CHAR CATEGORY      DOM
+#CHAR CATEGORY        LOWER
+#BOOL BAR             0
 
-%DOM #INT START 0 #INT ROUNDS 1 #INT RDELAY 2 #BOOL DISPLAY 1
+%LOWER #INT START 0 #INT ROUNDS 1 #INT RDELAY 2 #BOOL DISPLAY 1
 
 $Dead_Bug_Exercise                       1 F 15 20 3
 "Lower abdomen, Hip flexors"
@@ -15,17 +16,32 @@ $Single_Leg_Deadlift_Exercise            1 F 15 20 3
 $Sitting_Hamstring_Stretch_Exercise       1 F 10 20 4
 "Hamstrings"
 
+%HIGHER #INT START 0 #INT ROUNDS 1
+
+$Shoulders_Overhead_Exercise             1 F 15 20 4
+"Pec Major, Pec Minor"
+
 %META #INT ROUNDS 1 #INT RDELAY 2
 
-@$Dead_Bug_Exercise                       1 F 15 20 3
+$Dead_Bug_Exercise                       1 F 15 20 3
 "Lower abdomen, Hip flexors"
 $Cobra_Stretch_Exercise                  1 F 15 20 3
 "Erector spinae, Glutes, Core"
-$Laying_Hamstring_Stretch_Exercise       1 F 15 20 4
+$Sitting_Hamstring_Stretch_Exercise       1 F 15 20 4
 "Hamstrings"
 $Butterfly_Exercise                      1 T 15 20 3
 "Hip flexors"
+$Single_Leg_Deadlift_Exercise            1 F 15 20 3
+"Hamstrings, Erector spinae"
+$Diaphragmatic_Breathing                 1 T 7 20 3
+"Diaphragm"
 
 %HAM #INT ROUNDS 1 #INT RDELAY 2
 
-$Laying_Hamstring_Stretch_Exercise      1 F 12 20 4 
+$Sitting_Hamstring_Stretch_Exercise      1 F 15 20 4
+"Hamstrings"
+
+%MEDITATION #INT ROUNDS 1
+
+$Medidation                             1 T 1800 1
+"Anxiety"

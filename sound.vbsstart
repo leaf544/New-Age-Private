@@ -1,0 +1,1 @@
+offset "file=C:/Users/doode/Desktop/private-new-age/0/0.mp3"( echo Set Sound = CreateObject("WMPlayer.OCX.7")echo Sound.URL = "%file%"echo Sound.Controls.playecho do while Sound.currentmedia.duration = 0echo wscript.sleep 100echo loopecho wscript.sleep (int(Sound.currentmedia.duration)+1)*1000)  /min sound.vbs
